@@ -16,4 +16,3 @@ querycanvas-schema/**
 querycanvas-results/**
 db-schema/**
 query-results/**
-node_modules/**

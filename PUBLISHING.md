@@ -28,7 +28,7 @@ npm install -g @vsce/vsce
 ### 1. Verify Package
 
 ```bash
-cd /Users/okuyama/Documents/projects/vsex001
+cd /Users/okuyama/Documents/projects/querycanvas
 vsce package
 ```
 

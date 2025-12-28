@@ -220,7 +220,7 @@ export class ConnectionProfileManager {
      * Secret Storage のキーを生成
      */
     private getPasswordKey(profileId: string): string {
-        return `vsex001.db.password.${profileId}`;
+        return `querycanvas.db.password.${profileId}`;
     }
 
     /**

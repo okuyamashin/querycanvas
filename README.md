@@ -202,7 +202,7 @@ npm run watch
 ### Project Structure
 
 ```
-vsex001/
+querycanvas/
 ├── src/
 │   ├── extension.ts                    # Extension entry point
 │   ├── databaseClientPanel.ts          # Webview UI management
@@ -303,4 +303,4 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Repository
 
-https://github.com/okuyamashin/vsex001
+https://github.com/okuyamashin/querycanvas
