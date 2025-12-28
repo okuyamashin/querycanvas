@@ -6,6 +6,7 @@ import { SessionStateManager } from './sessionStateManager';
 import { AutoQueryResultSaver } from './autoQueryResultSaver';
 import { SavedQueryManager } from './savedQueryManager';
 import { TSVReader } from './tsvReader';
+import { SqlValidator } from './sqlValidator';
 
 /**
  * データベースクライアントのWebviewパネルを管理するクラス
@@ -320,6 +321,12 @@ export class DatabaseClientPanel {
             // 接続を確認
             if (!this._currentConnection || !this._currentConnection.isConnected()) {
                 throw new Error('データベースに接続されていません。先に接続してください。');
+            }
+
+            // SQLクエリをバリデーション（参照系のみ許可）
+            const validation = SqlValidator.validate(query.sql);
+            if (!validation.isValid) {
+                throw new Error(validation.error || 'Invalid SQL query');
             }
 
             // クエリを実行
@@ -872,6 +879,12 @@ export class DatabaseClientPanel {
             const query = data.query.trim();
             if (!query) {
                 throw new Error('SQLクエリが入力されていません');
+            }
+
+            // SQLクエリをバリデーション（参照系のみ許可）
+            const validation = SqlValidator.validate(query);
+            if (!validation.isValid) {
+                throw new Error(validation.error || 'Invalid SQL query');
             }
 
             // クエリを実行

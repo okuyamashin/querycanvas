@@ -14,6 +14,7 @@ A database client extension for Cursor/VS Code. Supports MySQL/PostgreSQL with A
 - **Intuitive UI**: SQL input area and result display table
 - **Performance Measurement**: Monitor query performance
 - **Error Handling**: Clear error messages
+- **🔒 Read-Only Mode**: Only SELECT, SHOW, DESC, EXPLAIN queries allowed (prevents accidental data modification)
 
 ### 📋 Automated Schema Documentation ⭐
 - Automatically extract table structures
@@ -217,6 +218,7 @@ vsex001/
 - Passwords stored in VS Code Secret Storage
 - Parameterized queries to prevent SQL injection
 - SSL connection support
+- **Read-Only Mode**: Prevents accidental data modification (INSERT, UPDATE, DELETE, ALTER, TRUNCATE are blocked)
 
 ## Documentation
 

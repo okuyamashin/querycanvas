@@ -23,7 +23,9 @@
     "executeSuccess": "クエリを実行しました (行数: {count}, 時間: {time}秒)",
     "executeError": "クエリエラー: {error}",
     "noQuery": "SQLクエリが入力されていません",
-    "notConnected": "データベースに接続されていません。先に接続してください。"
+    "notConnected": "データベースに接続されていません。先に接続してください。",
+    "readOnlyMode": "読み取り専用モード: SELECT、SHOW、DESC、EXPLAINクエリのみ実行可能です",
+    "forbiddenQuery": "クエリタイプ \"{keyword}\" は許可されていません。参照系クエリのみ実行可能です。"
   },
   "savedQuery": {
     "title": "保存済みクエリ",

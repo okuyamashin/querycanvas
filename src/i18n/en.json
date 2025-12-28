@@ -23,7 +23,9 @@
     "executeSuccess": "Query executed successfully (rows: {count}, time: {time}s)",
     "executeError": "Query error: {error}",
     "noQuery": "No SQL query entered",
-    "notConnected": "Not connected to database. Please connect first."
+    "notConnected": "Not connected to database. Please connect first.",
+    "readOnlyMode": "Read-only mode: Only SELECT, SHOW, DESC, EXPLAIN queries are allowed",
+    "forbiddenQuery": "Query type \"{keyword}\" is not allowed. Only read-only queries are permitted."
   },
   "savedQuery": {
     "title": "Saved Queries",
