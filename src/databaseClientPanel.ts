@@ -283,6 +283,15 @@ export class DatabaseClientPanel {
                 throw new Error('クエリが見つかりません');
             }
 
+            // セッションにSQLを保存（UIに反映）
+            this._sessionManager.updateSqlInput(query.sql);
+
+            // UIにもSQLを読み込む
+            this.sendMessage({
+                type: 'loadSqlToEditor',
+                sql: query.sql
+            });
+
             // キャッシュファイルが存在するか確認
             if (query.lastResultFile) {
                 const cachedResult = TSVReader.readTSVFile(query.lastResultFile);
@@ -1478,6 +1487,9 @@ export class DatabaseClientPanel {
                 case 'queryDeleted':
                     handleQueryOperation(message);
                     break;
+                case 'loadSqlToEditor':
+                    handleLoadSqlToEditor(message);
+                    break;
             }
         });
 
@@ -2007,6 +2019,16 @@ export class DatabaseClientPanel {
                 showMessage('クエリを保存しました', 'success');
             } else if (message.type === 'queryDeleted' && message.success) {
                 showMessage('クエリを削除しました', 'success');
+            }
+        }
+
+        function handleLoadSqlToEditor(message) {
+            document.getElementById('sqlInput').value = message.sql;
+            
+            // デバウンスタイマーをクリア（既にセッション保存済み）
+            if (sqlInputDebounceTimer) {
+                clearTimeout(sqlInputDebounceTimer);
+                sqlInputDebounceTimer = null;
             }
         }
     </script>
