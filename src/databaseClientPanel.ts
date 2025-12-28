@@ -18,6 +18,7 @@ export class DatabaseClientPanel {
     private readonly _autoSaver: AutoQueryResultSaver;
     private _disposables: vscode.Disposable[] = [];
     private _currentConnection: IDBConnection | null = null;
+    private _sessionFileWatcher: vscode.FileSystemWatcher | null = null;
 
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, profileManager: ConnectionProfileManager) {
         this._panel = panel;
@@ -30,6 +31,9 @@ export class DatabaseClientPanel {
 
         // セッション状態を復元
         this._restoreSession();
+
+        // セッションファイルの監視を開始
+        this._watchSessionFile();
 
         // パネルが閉じられたときのクリーンアップ
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
@@ -85,6 +89,12 @@ export class DatabaseClientPanel {
     public dispose() {
         DatabaseClientPanel.currentPanel = undefined;
 
+        // ファイル監視を停止
+        if (this._sessionFileWatcher) {
+            this._sessionFileWatcher.dispose();
+            this._sessionFileWatcher = null;
+        }
+
         // 接続を切断
         if (this._currentConnection) {
             this._currentConnection.disconnect().catch(err => {
@@ -115,6 +125,60 @@ export class DatabaseClientPanel {
                 sqlInput: state.sqlInput,
                 connectionId: state.connectionId
             });
+        }
+    }
+
+    /**
+     * セッションファイルの変更を監視
+     */
+    private _watchSessionFile() {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders || workspaceFolders.length === 0) {
+            return;
+        }
+
+        const sessionFilePath = vscode.Uri.joinPath(
+            workspaceFolders[0].uri,
+            '.vscode',
+            'db-client-session.json'
+        );
+
+        // ファイル監視を開始
+        this._sessionFileWatcher = vscode.workspace.createFileSystemWatcher(
+            sessionFilePath.fsPath,
+            false, // create イベントを監視
+            false, // change イベントを監視
+            true   // delete イベントは無視
+        );
+
+        // ファイルが変更された時
+        this._sessionFileWatcher.onDidChange(() => {
+            this._onSessionFileChanged();
+        });
+
+        // ファイルが作成された時（初回保存時）
+        this._sessionFileWatcher.onDidCreate(() => {
+            this._onSessionFileChanged();
+        });
+
+        this._disposables.push(this._sessionFileWatcher);
+    }
+
+    /**
+     * セッションファイルが変更された時の処理
+     */
+    private _onSessionFileChanged() {
+        try {
+            // セッション状態を再読み込み
+            const state = this._sessionManager.getState();
+            
+            // WebviewにSQL内容を更新（外部変更のみ反映）
+            this.sendMessage({
+                type: 'updateSqlFromFile',
+                sqlInput: state.sqlInput
+            });
+        } catch (error) {
+            console.error('セッションファイル変更の処理エラー:', error);
         }
     }
 
@@ -1129,6 +1193,9 @@ export class DatabaseClientPanel {
                 case 'restoreSession':
                     handleRestoreSession(message);
                     break;
+                case 'updateSqlFromFile':
+                    handleUpdateSqlFromFile(message);
+                    break;
             }
         });
 
@@ -1413,6 +1480,31 @@ export class DatabaseClientPanel {
             if (message.connectionId) {
                 const select = document.getElementById('profileSelect');
                 select.value = message.connectionId;
+            }
+        }
+
+        function handleUpdateSqlFromFile(message) {
+            const sqlInput = document.getElementById('sqlInput');
+            const currentSql = sqlInput.value;
+            const newSql = message.sqlInput || '';
+            
+            // カーソル位置を保存
+            const cursorPosition = sqlInput.selectionStart;
+            const scrollPosition = sqlInput.scrollTop;
+            
+            // 内容が異なる場合のみ更新（無限ループ防止）
+            if (currentSql !== newSql) {
+                sqlInput.value = newSql;
+                
+                // カーソル位置とスクロール位置を復元
+                sqlInput.setSelectionRange(cursorPosition, cursorPosition);
+                sqlInput.scrollTop = scrollPosition;
+                
+                // デバウンスタイマーをクリア（ファイルからの更新は保存不要）
+                if (sqlInputDebounceTimer) {
+                    clearTimeout(sqlInputDebounceTimer);
+                    sqlInputDebounceTimer = null;
+                }
             }
         }
 
