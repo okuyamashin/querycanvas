@@ -4,6 +4,12 @@ A database client extension for Cursor/VS Code. Supports MySQL/PostgreSQL with A
 
 ## Features
 
+### 🤖 Cursor AI Integration ⭐
+- **Edit SQL via AI**: Cursor can modify `.vscode/db-client-session.json` to update SQL in real-time
+- **Automatic sync**: File watcher detects changes and updates UI immediately
+- **AI-powered query generation**: Ask Cursor to write SQL with display options
+- **Smart formatting**: Cursor knows the display options syntax and can apply it
+
 ### 🗄️ Database Connection
 - **Multiple Connections**: Manage connections for development, staging, production environments
 - **MySQL Support**: Supports MySQL 5.7+, 8.0+
@@ -118,6 +124,27 @@ SELECT amount, created_at FROM orders LIMIT 10;
 3. All table definitions are saved to `db-schema/tables/` in Markdown format
 4. Add logical names and descriptions with Cursor AI
 5. Your additions are preserved during re-extraction
+
+### 6. Use with Cursor AI (Advanced) 🤖
+
+You can use Cursor AI to edit SQL queries directly:
+
+1. Open Database Client and connect to database
+2. Session file is created at `.vscode/db-client-session.json`
+3. In Cursor Chat, ask:
+   ```
+   @Codebase Edit the SQL in db-client-session.json to select top 10 orders with amount > 1000,
+   and add display options to format the amount with commas
+   ```
+4. Cursor AI modifies the session file
+5. Changes appear in Database Client UI immediately
+6. Click Execute to run the query
+
+**Example prompts:**
+- "Add a WHERE clause to the current SQL query"
+- "Format the price column with 2 decimal places"
+- "Add datetime formatting to the created_at column"
+- "Rewrite this query to join with users table"
 
 ## Implementation Status
 

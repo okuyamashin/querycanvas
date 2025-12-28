@@ -3,6 +3,57 @@
 ## Project Overview
 This is a database client extension for VS Code/Cursor with AI-powered features.
 
+## 🤖 Cursor AI Integration
+
+This extension is designed to work seamlessly with Cursor AI. You can edit SQL queries by modifying the session file.
+
+### SQL Session File
+
+**Location:** `.vscode/db-client-session.json`
+
+**What it contains:**
+- Current SQL query in the editor
+- Active database connection ID
+- Last update timestamp
+
+**How Cursor AI can help:**
+
+1. **Edit SQL directly in session file:**
+   - User can ask: "Modify the SQL in the session to add a WHERE clause"
+   - Cursor AI edits `.vscode/db-client-session.json`
+   - Changes reflect in Database Client UI immediately (via file watcher)
+
+2. **Generate optimized SQL:**
+   - User can ask: "Rewrite this SQL with display options"
+   - Cursor AI updates the `sqlInput` field with formatted SQL
+
+3. **Add display options:**
+   - User can ask: "Add display formatting to this query"
+   - Cursor AI inserts `/** @column ... */` comments
+
+**Example session file:**
+```json
+{
+  "connectionId": "production-db",
+  "isConnected": false,
+  "sqlInput": "/**\n * @column amount align=right format=number comma=true\n */\nSELECT amount FROM orders",
+  "lastUpdated": "2025-12-28T12:00:00.000Z"
+}
+```
+
+**Workflow:**
+```
+User: "Add display options to format the 'price' column"
+  ↓
+Cursor AI: Edits .vscode/db-client-session.json
+  ↓
+File watcher: Detects change
+  ↓
+UI: Updates automatically
+  ↓
+User: Sees formatted SQL in Database Client
+```
+
 ## SQL Display Options Feature
 
 This extension supports custom display formatting through SQL comments.
