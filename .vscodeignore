@@ -10,7 +10,6 @@ vsc-extension-quickstart.md
 **/*.ts
 docs/**
 !icon.png
-!icon.svg
 .vscode/querycanvas-connections.json
 .vscode/db-connections.json
 querycanvas-schema/**
