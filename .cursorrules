@@ -95,6 +95,15 @@ SELECT ...
 - `bg=<color>` or `backgroundColor=<color>` - Background color
 - `bold=true` - Make text bold
 
+#### Data Type & Conditional Styling 🆕
+- `type=int|float|decimal|text` - Specify column data type
+- `if<演算子><値>:<スタイル>` - Conditional styling based on cell value
+  - Operators: `<`, `>`, `<=`, `>=`, `==`, `!=`
+  - Styles: `color=<color>`, `bg=<color>`, `bold=true`, `fontWeight=<value>`
+  - Example: `if<0:color=red` (negative values in red)
+  - Example: `if>1000:bold=true` (values over 1000 in bold)
+  - Example: `if<=0:color=#999999 if>=10000:color=#ff0000,bold=true` (multiple conditions)
+
 ### Examples
 
 #### Financial Report
@@ -119,13 +128,24 @@ SELECT 店舗名, 売上, 前年比, 更新日時 FROM sales_report;
 SELECT ID, ステータス, 金額, 作成日時 FROM orders;
 ```
 
+#### Conditional Styling Example 🆕
+```sql
+/**
+ * @column 売上 type=int align=right format=number comma=true if<0:color=red,bold=true if>1000000:color=blue,bold=true
+ * @column 在庫数 type=int align=right if<=0:color=red,bold=true if<=10:color=orange if>100:color=green
+ * @column 達成率 type=float align=right format=number decimal=1 if<80:color=red if>=100:color=green,bold=true
+ */
+SELECT 売上, 在庫数, 達成率 FROM performance_data;
+```
+
 ### Implementation Details
 - Parser: `src/sqlCommentParser.ts`
 - Options are extracted in `DatabaseClientPanel._handleExecuteQuery()`
 - Formatting applied in Webview's `handleQueryResult()` function
 - Number formatting uses `formatValue()` helper
 - Datetime formatting uses `formatDateTime()` helper
-- Styling uses `generateColumnStyle()` helper
+- Column styling uses `generateColumnStyle()` helper (for headers)
+- Conditional styling uses `generateConditionalStyle()` helper (for cells, evaluates conditions based on cell values)
 
 ## Coding Guidelines
 
@@ -163,6 +183,8 @@ SELECT ID, ステータス, 金額, 作成日時 FROM orders;
 2. Use `align=right` for numeric columns
 3. Use `format=number comma=true` for currency/large numbers
 4. Use `format=datetime pattern=...` for timestamps
-5. Keep column names in original language (often Japanese)
-6. Remember this is a read-only client (no INSERT/UPDATE/DELETE)
+5. Use conditional styling for highlighting important values (e.g., `if<0:color=red` for negative numbers)
+6. Specify `type=int|float|decimal` when using conditional styling
+7. Keep column names in original language (often Japanese)
+8. Remember this is a read-only client (no INSERT/UPDATE/DELETE)
 

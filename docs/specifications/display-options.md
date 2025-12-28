@@ -155,6 +155,69 @@ SELECT ...
 @column タイトル bold=true color=#ff0000
 ```
 
+### 8. データ型指定 (type) 🆕
+
+**構文:** `type=<int|float|decimal|text>`
+
+**説明:** カラムのデータ型を明示的に指定（条件付きスタイルで使用）
+
+**例:**
+```sql
+@column 金額 type=int
+@column 割合 type=float
+@column 価格 type=decimal
+```
+
+### 9. 条件付きスタイル (if演算子) 🆕
+
+**構文:** `if<演算子><値>:<スタイル>=<値>,<スタイル>=<値>...`
+
+**演算子:**
+- `<` : より小さい
+- `>` : より大きい
+- `<=` : 以下
+- `>=` : 以上
+- `==` : 等しい
+- `!=` : 等しくない
+
+**適用可能なスタイル:**
+- `color=<色>` : 文字色
+- `bg=<色>` or `backgroundColor=<色>` : 背景色
+- `bold=true` : 太字
+- `fontWeight=<値>` : フォントウェイト
+
+**例:**
+```sql
+-- マイナスの値を赤字で表示
+@column 損益 type=int if<0:color=red
+
+-- 1000を超える値を太字で表示
+@column 売上 type=int if>1000:bold=true
+
+-- 0以下をグレー、10000以上を赤字+太字で表示（複数条件）
+@column 在庫 type=int if<=0:color=#999999 if>=10000:color=#ff0000,bold=true
+
+-- 100%を超えたら緑背景
+@column 達成率 type=float if>100:bg=#90ee90,color=#006400
+
+-- 特定の値を強調
+@column ステータスコード type=int if==200:color=green if!=200:color=red,bold=true
+```
+
+**複雑な例:**
+```sql
+/**
+ * @column 金額 type=decimal align=right format=number comma=true decimal=2 if<0:color=red,bold=true if>=1000000:color=blue,bold=true
+ */
+SELECT 金額 FROM transactions;
+```
+
+**動作:**
+1. 各セルの値を数値に変換
+2. 条件を順番に評価
+3. 条件が満たされた場合、指定されたスタイルを適用
+4. 複数の条件が満たされた場合、後の条件のスタイルが優先される
+
 ## 実用例
 
 ### 例1: 売上レポート
@@ -237,6 +300,76 @@ SELECT
     最終確認
 FROM server_status
 WHERE ステータス = '稼働中';
+```
+
+### 例5: 条件付きスタイリング - 損益レポート 🆕
+
+```sql
+/**
+ * @column 部門 width=150px
+ * @column 売上 type=int align=right format=number comma=true
+ * @column 費用 type=int align=right format=number comma=true
+ * @column 利益 type=int align=right format=number comma=true if<0:color=red,bold=true if>1000000:color=blue,bold=true
+ * @column 利益率 type=float align=right format=number decimal=1 if<0:color=red if>15:color=green,bold=true
+ */
+SELECT 
+    部門,
+    売上,
+    費用,
+    利益,
+    利益率
+FROM department_performance
+WHERE 年月 = '2025-12'
+ORDER BY 利益 DESC;
+```
+
+### 例6: 条件付きスタイリング - 在庫アラート 🆕
+
+```sql
+/**
+ * @column 商品コード width=100px
+ * @column 商品名 width=200px
+ * @column 在庫数 type=int align=right format=number comma=true if<=0:color=red,bold=true if<=10:color=orange if>100:color=green
+ * @column 安全在庫 type=int align=right format=number comma=true
+ * @column 発注推奨 type=int align=right if>0:bold=true
+ * @column 最終更新 format=datetime pattern=MM/dd_HH:mm
+ */
+SELECT 
+    商品コード,
+    商品名,
+    在庫数,
+    安全在庫,
+    CASE WHEN 在庫数 <= 安全在庫 THEN 安全在庫 - 在庫数 ELSE 0 END AS 発注推奨,
+    最終更新
+FROM inventory
+WHERE カテゴリ = '重要商品'
+ORDER BY 在庫数 ASC;
+```
+
+### 例7: 条件付きスタイリング - KPI達成状況 🆕
+
+```sql
+/**
+ * @column 営業担当 width=120px
+ * @column 目標 type=int align=right format=number comma=true
+ * @column 実績 type=int align=right format=number comma=true
+ * @column 達成率 type=float align=right format=number decimal=1 if<80:color=red,bg=#ffe6e6 if>=80:color=orange if>=100:color=green,bold=true if>=120:color=blue,bg=#e6f3ff,bold=true
+ * @column 評価 align=center
+ */
+SELECT 
+    営業担当,
+    目標,
+    実績,
+    (実績 * 100.0 / 目標) AS 達成率,
+    CASE 
+        WHEN 実績 >= 目標 * 1.2 THEN 'S'
+        WHEN 実績 >= 目標 THEN 'A'
+        WHEN 実績 >= 目標 * 0.8 THEN 'B'
+        ELSE 'C'
+    END AS 評価
+FROM sales_performance
+WHERE 年月 = '2025-12'
+ORDER BY 達成率 DESC;
 ```
 
 ## 実装詳細
@@ -391,11 +524,13 @@ SELECT DATE_FORMAT(作成日時, '%Y-%m-%d %H:%i:%s') AS 作成日時 FROM ...
 
 ## 将来の拡張案
 
-- [ ] 条件付きフォーマット (値によって色を変える)
+- [x] **条件付きフォーマット (値によって色を変える)** ✅ 実装済み (2025-12-28)
 - [ ] カスタム関数でのフォーマット
 - [ ] プリセットパターンの保存
 - [ ] UIからのオプション設定
 - [ ] エクスポート時のフォーマット保持
+- [ ] 文字列の条件付きスタイル (contains, startsWith, endsWith など)
+- [ ] 正規表現によるパターンマッチング
 
 ## 関連ファイル
 
@@ -406,5 +541,6 @@ SELECT DATE_FORMAT(作成日時, '%Y-%m-%d %H:%i:%s') AS 作成日時 FROM ...
 
 ## 更新履歴
 
+- 2025-12-28: 条件付きスタイリング機能を追加 (type指定、if演算子による条件付きスタイル)
 - 2025-12-28: 初版作成
 

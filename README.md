@@ -27,6 +27,7 @@ A Cursor-integrated database client extension for VS Code. Supports MySQL/Postgr
 - **🔒 Read-Only Mode**: Only SELECT, SHOW, DESC, EXPLAIN queries allowed (prevents accidental data modification)
 - **✨ SQL Formatter**: One-click SQL formatting for better readability
 - **🎨 Display Options**: Customize result display via SQL comments (alignment, number format, datetime format, colors)
+- **🎯 Conditional Styling** 🆕: Dynamic cell styling based on values (e.g., negative numbers in red, values over threshold in bold)
 
 ### 📋 Automated Schema Documentation ⭐
 - Automatically extract table structures
@@ -108,7 +109,7 @@ A Cursor-integrated database client extension for VS Code. Supports MySQL/Postgr
 **Tip: Use display options for better presentation:**
 ```sql
 /**
- * @column amount align=right format=number comma=true
+ * @column amount type=int align=right format=number comma=true if<0:color=red if>1000:bold=true
  * @column created_at format=datetime pattern=yyyy/MM/dd_HH:mm
  */
 SELECT amount, created_at FROM orders LIMIT 10;

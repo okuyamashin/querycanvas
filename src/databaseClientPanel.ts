@@ -2442,7 +2442,7 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
                 .replace('ss', seconds);
         }
 
-        // 列スタイル生成関数
+        // 列スタイル生成関数（ヘッダー用）
         function generateColumnStyle(options) {
             const styles = [];
 
@@ -2465,6 +2465,75 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
 
             if (options.fontWeight) {
                 styles.push(\`font-weight: \${options.fontWeight}\`);
+            }
+
+            return styles.join('; ');
+        }
+
+        // 値に基づく条件付きスタイル生成関数（セル用）
+        function generateConditionalStyle(value, options) {
+            const styles = [];
+
+            // 基本スタイル
+            if (options.align) {
+                styles.push(\`text-align: \${options.align}\`);
+            }
+
+            // 条件付きスタイルの評価
+            if (options.conditionalStyles && options.conditionalStyles.length > 0) {
+                const numValue = typeof value === 'number' ? value : parseFloat(String(value));
+                
+                if (!isNaN(numValue)) {
+                    // 各条件ルールを評価
+                    for (const rule of options.conditionalStyles) {
+                        let conditionMet = false;
+
+                        switch (rule.operator) {
+                            case '<':
+                                conditionMet = numValue < rule.value;
+                                break;
+                            case '>':
+                                conditionMet = numValue > rule.value;
+                                break;
+                            case '<=':
+                                conditionMet = numValue <= rule.value;
+                                break;
+                            case '>=':
+                                conditionMet = numValue >= rule.value;
+                                break;
+                            case '==':
+                                conditionMet = numValue === rule.value;
+                                break;
+                            case '!=':
+                                conditionMet = numValue !== rule.value;
+                                break;
+                        }
+
+                        // 条件が満たされた場合、スタイルを適用
+                        if (conditionMet) {
+                            if (rule.styles.color) {
+                                styles.push(\`color: \${rule.styles.color}\`);
+                            }
+                            if (rule.styles.backgroundColor) {
+                                styles.push(\`background-color: \${rule.styles.backgroundColor}\`);
+                            }
+                            if (rule.styles.fontWeight) {
+                                styles.push(\`font-weight: \${rule.styles.fontWeight}\`);
+                            }
+                        }
+                    }
+                }
+            } else {
+                // 条件付きスタイルがない場合は基本スタイルのみ
+                if (options.backgroundColor) {
+                    styles.push(\`background-color: \${options.backgroundColor}\`);
+                }
+                if (options.color) {
+                    styles.push(\`color: \${options.color}\`);
+                }
+                if (options.fontWeight) {
+                    styles.push(\`font-weight: \${options.fontWeight}\`);
+                }
             }
 
             return styles.join('; ');
@@ -2511,7 +2580,8 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
                     const opts = displayOptionsMap.get(col);
                     const value = row[col];
                     const formattedValue = opts ? formatValue(value, opts) : value;
-                    const style = opts ? generateColumnStyle(opts) : '';
+                    // 条件付きスタイルを適用（値に基づいて動的にスタイルを変更）
+                    const style = opts ? generateConditionalStyle(value, opts) : '';
                     html += \`<td style="\${style}">\${formattedValue !== null && formattedValue !== undefined ? formattedValue : '<NULL>'}</td>\`;
                 });
                 html += '</tr>';

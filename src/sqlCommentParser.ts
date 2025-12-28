@@ -2,9 +2,26 @@
  * SQLコメントから表示オプションを抽出するパーサー
  */
 
+/** 条件付きスタイルルール */
+export interface ConditionalStyleRule {
+    /** 条件演算子 (<, >, <=, >=, ==, !=) */
+    operator: '<' | '>' | '<=' | '>=' | '==' | '!=';
+    /** 比較値 */
+    value: number;
+    /** 適用するスタイル */
+    styles: {
+        color?: string;
+        backgroundColor?: string;
+        bold?: boolean;
+        fontWeight?: string;
+    };
+}
+
 export interface ColumnDisplayOptions {
     /** 列名 */
     columnName: string;
+    /** データ型 (int, float, decimal, text) */
+    type?: 'int' | 'float' | 'decimal' | 'text';
     /** テキスト配置 (left, center, right) */
     align?: 'left' | 'center' | 'right';
     /** フォーマット種別 */
@@ -23,6 +40,8 @@ export interface ColumnDisplayOptions {
     color?: string;
     /** フォントウェイト */
     fontWeight?: string;
+    /** 条件付きスタイルルール */
+    conditionalStyles?: ConditionalStyleRule[];
 }
 
 export interface QueryDisplayOptions {
@@ -87,13 +106,18 @@ export class SqlCommentParser {
             columnName
         };
 
-        // key=value 形式のオプションを抽出
+        // key=value 形式のオプションと条件付きスタイルを抽出
         const optionMatches = optionsStr.matchAll(/(\w+)=([^\s]+)/g);
         for (const optionMatch of optionMatches) {
             const key = optionMatch[1];
             const value = optionMatch[2];
 
             switch (key) {
+                case 'type':
+                    if (value === 'int' || value === 'float' || value === 'decimal' || value === 'text') {
+                        columnOption.type = value;
+                    }
+                    break;
                 case 'align':
                     if (value === 'left' || value === 'center' || value === 'right') {
                         columnOption.align = value;
@@ -130,6 +154,68 @@ export class SqlCommentParser {
                     }
                     break;
             }
+        }
+
+        // 条件付きスタイルの抽出 (if<0:color=red, if>1000:bold=true など)
+        const conditionalMatches = optionsStr.matchAll(/if([<>!=]+)(-?\d+(?:\.\d+)?):([^\s]+)/g);
+        for (const condMatch of conditionalMatches) {
+            const operator = condMatch[1];
+            const compareValue = parseFloat(condMatch[2]);
+            const styleStr = condMatch[3];
+
+            // 演算子の正規化
+            let normalizedOp: ConditionalStyleRule['operator'];
+            switch (operator) {
+                case '<':
+                case '>':
+                case '<=':
+                case '>=':
+                case '==':
+                case '!=':
+                    normalizedOp = operator;
+                    break;
+                default:
+                    continue; // 不正な演算子はスキップ
+            }
+
+            // スタイルのパース (color=red,bold=true のような形式)
+            const rule: ConditionalStyleRule = {
+                operator: normalizedOp,
+                value: compareValue,
+                styles: {}
+            };
+
+            const styleParts = styleStr.split(',');
+            for (const stylePart of styleParts) {
+                const [styleKey, styleValue] = stylePart.split('=');
+                if (!styleKey || !styleValue) {
+                    continue;
+                }
+
+                switch (styleKey) {
+                    case 'color':
+                        rule.styles.color = styleValue;
+                        break;
+                    case 'bg':
+                    case 'backgroundColor':
+                        rule.styles.backgroundColor = styleValue;
+                        break;
+                    case 'bold':
+                        if (styleValue === 'true') {
+                            rule.styles.bold = true;
+                            rule.styles.fontWeight = 'bold';
+                        }
+                        break;
+                    case 'fontWeight':
+                        rule.styles.fontWeight = styleValue;
+                        break;
+                }
+            }
+
+            if (!columnOption.conditionalStyles) {
+                columnOption.conditionalStyles = [];
+            }
+            columnOption.conditionalStyles.push(rule);
         }
 
         return columnOption;
@@ -235,6 +321,81 @@ export class SqlCommentParser {
 
         if (options.fontWeight) {
             styles.push(`font-weight: ${options.fontWeight}`);
+        }
+
+        return styles.join('; ');
+    }
+
+    /**
+     * 値に基づいて条件付きスタイルを生成
+     * @param value セルの値
+     * @param options 列オプション
+     * @returns CSSスタイル文字列
+     */
+    static generateConditionalStyle(value: any, options: ColumnDisplayOptions): string {
+        const styles: string[] = [];
+
+        // 基本スタイルを追加
+        if (options.align) {
+            styles.push(`text-align: ${options.align}`);
+        }
+
+        // 条件付きスタイルの評価
+        if (options.conditionalStyles && options.conditionalStyles.length > 0) {
+            // 数値に変換
+            const numValue = typeof value === 'number' ? value : parseFloat(String(value));
+            
+            if (!isNaN(numValue)) {
+                // 各条件ルールを評価
+                for (const rule of options.conditionalStyles) {
+                    let conditionMet = false;
+
+                    switch (rule.operator) {
+                        case '<':
+                            conditionMet = numValue < rule.value;
+                            break;
+                        case '>':
+                            conditionMet = numValue > rule.value;
+                            break;
+                        case '<=':
+                            conditionMet = numValue <= rule.value;
+                            break;
+                        case '>=':
+                            conditionMet = numValue >= rule.value;
+                            break;
+                        case '==':
+                            conditionMet = numValue === rule.value;
+                            break;
+                        case '!=':
+                            conditionMet = numValue !== rule.value;
+                            break;
+                    }
+
+                    // 条件が満たされた場合、スタイルを適用
+                    if (conditionMet) {
+                        if (rule.styles.color) {
+                            styles.push(`color: ${rule.styles.color}`);
+                        }
+                        if (rule.styles.backgroundColor) {
+                            styles.push(`background-color: ${rule.styles.backgroundColor}`);
+                        }
+                        if (rule.styles.fontWeight) {
+                            styles.push(`font-weight: ${rule.styles.fontWeight}`);
+                        }
+                    }
+                }
+            }
+        } else {
+            // 条件付きスタイルがない場合は基本スタイルのみ
+            if (options.backgroundColor) {
+                styles.push(`background-color: ${options.backgroundColor}`);
+            }
+            if (options.color) {
+                styles.push(`color: ${options.color}`);
+            }
+            if (options.fontWeight) {
+                styles.push(`font-weight: ${options.fontWeight}`);
+            }
         }
 
         return styles.join('; ');
