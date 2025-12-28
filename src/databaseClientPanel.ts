@@ -1099,6 +1099,29 @@ export class DatabaseClientPanel {
             color: var(--vscode-foreground);
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .help-button {
+            font-size: 11px;
+            padding: 4px 8px;
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .help-button:hover {
+            opacity: 1;
+            background-color: var(--vscode-button-secondaryHoverBackground);
+        }
+
         .sql-editor-section {
             margin-bottom: 0;
         }
@@ -1399,6 +1422,76 @@ export class DatabaseClientPanel {
         .radio-group input[type="radio"] {
             width: auto;
         }
+        .help-content {
+            line-height: 1.6;
+        }
+
+        .help-content h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: var(--vscode-foreground);
+        }
+
+        .help-content h4 {
+            margin-top: 15px;
+            margin-bottom: 8px;
+            color: var(--vscode-foreground);
+            font-size: 13px;
+        }
+
+        .help-content pre {
+            background-color: var(--vscode-textCodeBlock-background);
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .help-content code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .help-section {
+            margin-bottom: 20px;
+        }
+
+        .help-section p {
+            margin: 5px 0;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .options-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .options-table th,
+        .options-table td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid var(--vscode-panel-border);
+        }
+
+        .options-table th {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            font-weight: bold;
+        }
+
+        .options-table code {
+            background-color: var(--vscode-textCodeBlock-background);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .help-footer {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
     </style>
 </head>
 <body>
@@ -1437,7 +1530,12 @@ export class DatabaseClientPanel {
     </div>
 
     <div class="section sql-editor-section" id="sqlEditorSection">
-        <div class="section-title">SQL入力</div>
+        <div class="section-header">
+            <div class="section-title">SQL入力</div>
+            <button class="help-button" onclick="showDisplayOptionsHelp()" title="Display options help">
+                ❓ Display Options
+            </button>
+        </div>
         <textarea id="sqlInput" placeholder="SELECT * FROM users;" oninput="onSqlInputChange()"></textarea>
         <div class="button-group">
             <button onclick="executeQuery()">▶ 実行</button>
@@ -1456,6 +1554,118 @@ export class DatabaseClientPanel {
     <div class="result-container" id="resultContainer">
         <div class="section-title">実行結果</div>
         <div id="resultTable"></div>
+    </div>
+
+    <!-- Display Options ヘルプモーダル -->
+    <div id="displayOptionsHelpModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>🎨 Display Options - 結果表示のカスタマイズ</h2>
+                <button class="close-button" onclick="closeDisplayOptionsHelp()">&times;</button>
+            </div>
+            
+            <div class="help-content">
+                <p>SQLコメントを使って、クエリ結果の表示方法をカスタマイズできます。</p>
+                
+                <h3>📝 基本構文</h3>
+                <pre><code>/**
+ * @column &lt;列名&gt; &lt;オプション&gt;=&lt;値&gt; ...
+ */
+SELECT ...</code></pre>
+
+                <h3>💡 よく使うオプション</h3>
+                
+                <div class="help-section">
+                    <h4>数値フォーマット</h4>
+                    <pre><code>/**
+ * @column 売上 align=right format=number comma=true
+ * @column 価格 align=right format=number decimal=2
+ */
+SELECT 売上, 価格 FROM sales;</code></pre>
+                    <p>結果: <code>1234567</code> → <code>1,234,567</code></p>
+                </div>
+
+                <div class="help-section">
+                    <h4>日時フォーマット</h4>
+                    <pre><code>/**
+ * @column 作成日時 format=datetime pattern=yyyy/MM/dd_HH:mm:ss
+ */
+SELECT 作成日時 FROM orders;</code></pre>
+                    <p>結果: <code>2025-12-28T14:30:00</code> → <code>2025/12/28 14:30:00</code></p>
+                </div>
+
+                <div class="help-section">
+                    <h4>色とスタイル</h4>
+                    <pre><code>/**
+ * @column ステータス color=#00ff00 bold=true
+ * @column 警告 bg=#ff6b6b color=#fff
+ */
+SELECT ステータス, 警告 FROM monitoring;</code></pre>
+                </div>
+
+                <h3>📚 利用可能なオプション</h3>
+                <table class="options-table">
+                    <tr>
+                        <th>オプション</th>
+                        <th>説明</th>
+                        <th>例</th>
+                    </tr>
+                    <tr>
+                        <td><code>align</code></td>
+                        <td>テキスト配置</td>
+                        <td><code>align=right</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>format</code></td>
+                        <td>値のフォーマット</td>
+                        <td><code>format=number</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>comma</code></td>
+                        <td>カンマ区切り</td>
+                        <td><code>comma=true</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>decimal</code></td>
+                        <td>小数点以下桁数</td>
+                        <td><code>decimal=2</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>pattern</code></td>
+                        <td>日時パターン</td>
+                        <td><code>pattern=yyyy/MM/dd</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>width</code></td>
+                        <td>列幅</td>
+                        <td><code>width=200px</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>color</code></td>
+                        <td>文字色</td>
+                        <td><code>color=#ff0000</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>bg</code></td>
+                        <td>背景色</td>
+                        <td><code>bg=#ffff00</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>bold</code></td>
+                        <td>太字</td>
+                        <td><code>bold=true</code></td>
+                    </tr>
+                </table>
+
+                <h3>📖 詳細ドキュメント</h3>
+                <p>詳しくは <code>docs/specifications/display-options.md</code> を参照してください。</p>
+                
+                <div class="help-footer">
+                    <button onclick="insertExampleQuery()">📋 サンプルSQLを挿入</button>
+                    <button onclick="closeDisplayOptionsHelp()" class="secondary">閉じる</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- メッセージとステータス表示エリア（フッターの直前） -->
@@ -2500,6 +2710,38 @@ export class DatabaseClientPanel {
             }
             
             showMessage('SQLをフォーマットしました', 'success');
+        }
+
+        // Display Options ヘルプを表示
+        function showDisplayOptionsHelp() {
+            document.getElementById('displayOptionsHelpModal').className = 'modal show';
+        }
+
+        // Display Options ヘルプを閉じる
+        function closeDisplayOptionsHelp() {
+            document.getElementById('displayOptionsHelpModal').className = 'modal';
+        }
+
+        // サンプルSQLを挿入
+        function insertExampleQuery() {
+            const sqlInput = document.getElementById('sqlInput');
+            const exampleSql = \`/**
+ * @column ID align=right
+ * @column 売上 align=right format=number comma=true
+ * @column 更新日時 format=datetime pattern=yyyy/MM/dd_HH:mm:ss
+ */
+SELECT ID, 売上, 更新日時 FROM sales_report LIMIT 10;\`;
+            
+            sqlInput.value = exampleSql;
+            closeDisplayOptionsHelp();
+            
+            // セッションに保存
+            vscode.postMessage({
+                type: 'sqlInputChanged',
+                data: { sql: exampleSql }
+            });
+            
+            showMessage('サンプルSQLを挿入しました', 'success');
         }
     </script>
 </body>
