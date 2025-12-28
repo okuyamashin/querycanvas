@@ -1625,6 +1625,10 @@ export class DatabaseClientPanel {
                         📈 グラフ
                     </button>
                 </div>
+                <!-- グラフ画像コピーボタン -->
+                <button class="secondary" id="chartImageCopyBtn" onclick="copyChartAsImage()" style="display: none;" title="グラフを画像としてコピー（PowerPointに貼り付け可能）">
+                    📊 グラフコピー
+                </button>
                 <div class="button-group" id="resultButtons" style="display: none; gap: 10px;">
                     <button class="secondary" onclick="copyTableAsTSV()" title="PowerPointに貼り付け可能なタブ区切り形式でコピー">
                         📋 TSVコピー
@@ -2886,13 +2890,15 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
             // 行スタイルルール
             const rowStyleRules = message.rowStyleRules || [];
 
-            // グラフオプションがある場合は、トグルボタンを表示
+            // グラフオプションがある場合は、トグルボタンとグラフコピーボタンを表示
             if (message.chartOptions) {
                 document.getElementById('viewToggle').style.display = 'flex';
+                document.getElementById('chartImageCopyBtn').style.display = 'inline-block';
                 // グラフを描画
                 renderChart(message.columns, message.rows, message.chartOptions, displayOptionsMap);
             } else {
                 document.getElementById('viewToggle').style.display = 'none';
+                document.getElementById('chartImageCopyBtn').style.display = 'none';
             }
 
             // テーブルを生成
@@ -3082,6 +3088,41 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
             document.getElementById('resultChart').style.display = 'block';
             document.getElementById('tableViewBtn').classList.remove('active');
             document.getElementById('chartViewBtn').classList.add('active');
+        }
+
+        /**
+         * グラフを画像としてクリップボードにコピー
+         */
+        async function copyChartAsImage() {
+            try {
+                const canvas = document.getElementById('chartCanvas');
+                if (!canvas) {
+                    showMessage('グラフが見つかりません', 'error');
+                    return;
+                }
+
+                // Canvasを白背景のBlobに変換
+                canvas.toBlob(async (blob) => {
+                    if (!blob) {
+                        showMessage('画像の生成に失敗しました', 'error');
+                        return;
+                    }
+
+                    try {
+                        // ClipboardItem を使用して画像をクリップボードにコピー
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        await navigator.clipboard.write([item]);
+                        showMessage('グラフを画像としてコピーしました！PowerPointに貼り付けできます', 'success');
+                    } catch (err) {
+                        console.error('クリップボードへのコピーに失敗:', err);
+                        showMessage('クリップボードへのコピーに失敗しました: ' + err.message, 'error');
+                    }
+                }, 'image/png');
+
+            } catch (error) {
+                console.error('グラフコピーエラー:', error);
+                showMessage('グラフのコピーに失敗しました: ' + error.message, 'error');
+            }
         }
 
         function handleConnectionTestResult(message) {
