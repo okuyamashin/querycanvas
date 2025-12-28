@@ -105,9 +105,6 @@ export class DatabaseClientPanel {
             case 'disconnect':
                 this._handleDisconnect();
                 break;
-            case 'changePassword':
-                this._handleChangePassword(message.data);
-                break;
             case 'testConnection':
                 this._handleTestConnection(message.data);
                 break;
@@ -253,40 +250,6 @@ export class DatabaseClientPanel {
             });
 
             vscode.window.showErrorMessage(`切断エラー: ${errorMessage}`);
-        }
-    }
-
-    /**
-     * パスワードを変更
-     */
-    private async _handleChangePassword(data: { profileId: string }) {
-        try {
-            const profile = this._profileManager.getProfile(data.profileId);
-            if (!profile) {
-                throw new Error(`接続プロファイル "${data.profileId}" が見つかりません`);
-            }
-
-            // 新しいパスワードを入力
-            const newPassword = await vscode.window.showInputBox({
-                prompt: `${profile.name} の新しいパスワードを入力してください`,
-                password: true,
-                placeHolder: '新しいパスワード',
-                ignoreFocusOut: true
-            });
-
-            if (!newPassword) {
-                vscode.window.showInformationMessage('パスワードの変更がキャンセルされました');
-                return;
-            }
-
-            // パスワードを更新
-            await this._profileManager.updateProfile(profile, newPassword);
-
-            vscode.window.showInformationMessage(`${profile.name} のパスワードを更新しました`);
-
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            vscode.window.showErrorMessage(`パスワード変更エラー: ${errorMessage}`);
         }
     }
 
@@ -535,7 +498,6 @@ export class DatabaseClientPanel {
         </select>
         <button onclick="connectToDatabase()">接続</button>
         <button onclick="disconnectFromDatabase()">切断</button>
-        <button onclick="changePassword()">🔑 パスワード変更</button>
         <button onclick="openConnectionManager()">⚙️ 接続管理</button>
         <button onclick="getTableSchema()">📋 テーブル定義</button>
         <button onclick="openDataManager()">📁 データ管理</button>
@@ -625,21 +587,6 @@ export class DatabaseClientPanel {
 
         function disconnectFromDatabase() {
             vscode.postMessage({ type: 'disconnect' });
-        }
-
-        function changePassword() {
-            const select = document.getElementById('profileSelect');
-            const profileId = select.value;
-            
-            if (!profileId) {
-                showMessage('接続プロファイルを選択してください', 'error');
-                return;
-            }
-
-            vscode.postMessage({
-                type: 'changePassword',
-                data: { profileId }
-            });
         }
 
         function handleConnectionResult(message) {
