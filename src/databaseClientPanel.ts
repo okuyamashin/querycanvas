@@ -99,6 +99,15 @@ export class DatabaseClientPanel {
             case 'getProfiles':
                 this._handleGetProfiles();
                 break;
+            case 'addProfile':
+                this._handleAddProfile(message.data);
+                break;
+            case 'updateProfile':
+                this._handleUpdateProfile(message.data);
+                break;
+            case 'deleteProfile':
+                this._handleDeleteProfile(message.data);
+                break;
             case 'connect':
                 this._handleConnect(message.data);
                 break;
@@ -132,6 +141,126 @@ export class DatabaseClientPanel {
             profiles,
             activeId
         });
+    }
+
+    /**
+     * 新しい接続プロファイルを追加
+     */
+    private async _handleAddProfile(data: any) {
+        try {
+            const { profile, password } = data;
+            
+            // IDを生成
+            profile.id = ConnectionProfileManager.generateId();
+            
+            // プロファイルを追加
+            await this._profileManager.addProfile(profile, password);
+            
+            // 更新されたプロファイル一覧を送信
+            this._handleGetProfiles();
+            
+            vscode.window.showInformationMessage(`接続プロファイル "${profile.name}" を追加しました`);
+            
+            this.sendMessage({
+                type: 'profileAdded',
+                success: true
+            });
+            
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            vscode.window.showErrorMessage(`追加エラー: ${errorMessage}`);
+            
+            this.sendMessage({
+                type: 'profileAdded',
+                success: false,
+                error: errorMessage
+            });
+        }
+    }
+
+    /**
+     * 接続プロファイルを更新
+     */
+    private async _handleUpdateProfile(data: any) {
+        try {
+            const { profile, password } = data;
+            
+            // プロファイルを更新
+            await this._profileManager.updateProfile(profile, password);
+            
+            // 更新されたプロファイル一覧を送信
+            this._handleGetProfiles();
+            
+            vscode.window.showInformationMessage(`接続プロファイル "${profile.name}" を更新しました`);
+            
+            this.sendMessage({
+                type: 'profileUpdated',
+                success: true
+            });
+            
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            vscode.window.showErrorMessage(`更新エラー: ${errorMessage}`);
+            
+            this.sendMessage({
+                type: 'profileUpdated',
+                success: false,
+                error: errorMessage
+            });
+        }
+    }
+
+    /**
+     * 接続プロファイルを削除
+     */
+    private async _handleDeleteProfile(data: any) {
+        try {
+            const profile = this._profileManager.getProfile(data.profileId);
+            if (!profile) {
+                throw new Error('接続プロファイルが見つかりません');
+            }
+            
+            // 確認
+            const answer = await vscode.window.showWarningMessage(
+                `接続プロファイル "${profile.name}" を削除してもよろしいですか？`,
+                { modal: true },
+                '削除',
+                'キャンセル'
+            );
+            
+            if (answer !== '削除') {
+                this.sendMessage({
+                    type: 'profileDeleted',
+                    success: false,
+                    error: 'キャンセルされました'
+                });
+                return;
+            }
+            
+            // プロファイルを削除
+            await this._profileManager.deleteProfile(data.profileId);
+            
+            // 更新されたプロファイル一覧を送信
+            this._handleGetProfiles();
+            
+            vscode.window.showInformationMessage(`接続プロファイル "${profile.name}" を削除しました`);
+            
+            this.sendMessage({
+                type: 'profileDeleted',
+                success: true,
+                profileId: data.profileId
+            });
+            
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            vscode.window.showErrorMessage(`削除エラー: ${errorMessage}`);
+            
+            this.sendMessage({
+                type: 'profileDeleted',
+                success: false,
+                error: errorMessage
+            });
+        }
     }
 
     /**
@@ -487,6 +616,136 @@ export class DatabaseClientPanel {
         .hidden {
             display: none;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--vscode-editor-background);
+            border: 1px solid var(--vscode-panel-border);
+            padding: 20px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--vscode-panel-border);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--vscode-foreground);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .close-button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .profile-list {
+            margin-bottom: 20px;
+        }
+
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid var(--vscode-panel-border);
+            background-color: var(--vscode-input-background);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .profile-details {
+            font-size: 12px;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 6px;
+            background-color: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            border: 1px solid var(--vscode-input-border);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: 1px solid var(--vscode-focusBorder);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
     </style>
 </head>
 <body>
@@ -521,6 +780,83 @@ export class DatabaseClientPanel {
         <div class="result-info" id="resultInfo"></div>
     </div>
 
+    <!-- 接続管理モーダル -->
+    <div id="connectionManagerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>接続管理</h2>
+                <button class="close-button" onclick="closeConnectionManager()">&times;</button>
+            </div>
+            
+            <div class="profile-list" id="profileListContainer"></div>
+            
+            <button onclick="showAddProfileForm()">+ 新しい接続を追加</button>
+        </div>
+    </div>
+
+    <!-- 接続プロファイル追加/編集モーダル -->
+    <div id="profileFormModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="profileFormTitle">接続プロファイルを追加</h2>
+                <button class="close-button" onclick="closeProfileForm()">&times;</button>
+            </div>
+            
+            <form id="profileForm" onsubmit="saveProfile(event)">
+                <input type="hidden" id="profileId" value="">
+                
+                <div class="form-group">
+                    <label for="profileName">接続名 *</label>
+                    <input type="text" id="profileName" required placeholder="例: 開発DB">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileType">データベースタイプ *</label>
+                    <select id="profileType" required onchange="updateDefaultPort()">
+                        <option value="mysql">MySQL</option>
+                        <option value="postgresql">PostgreSQL</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileHost">ホスト *</label>
+                    <input type="text" id="profileHost" required value="localhost" placeholder="例: localhost">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profilePort">ポート *</label>
+                    <input type="number" id="profilePort" required value="3306" placeholder="3306">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileDatabase">データベース名 *</label>
+                    <input type="text" id="profileDatabase" required placeholder="例: myapp_development">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileUsername">ユーザー名 *</label>
+                    <input type="text" id="profileUsername" required placeholder="例: root">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profilePassword">パスワード</label>
+                    <input type="password" id="profilePassword" placeholder="パスワード（空欄可）">
+                    <small style="color: var(--vscode-descriptionForeground);">空欄の場合は接続時に入力を求められます</small>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="profileSsl">
+                    <label for="profileSsl">SSL接続を有効にする</label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="secondary" onclick="closeProfileForm()">キャンセル</button>
+                    <button type="submit">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const vscode = acquireVsCodeApi();
         
@@ -539,6 +875,13 @@ export class DatabaseClientPanel {
             switch (message.type) {
                 case 'profilesList':
                     handleProfilesList(message);
+                    break;
+                case 'profileAdded':
+                case 'profileUpdated':
+                case 'profileDeleted':
+                    if (message.success) {
+                        closeProfileForm();
+                    }
                     break;
                 case 'connectionResult':
                     handleConnectionResult(message);
@@ -567,6 +910,38 @@ export class DatabaseClientPanel {
                     option.selected = true;
                 }
                 select.appendChild(option);
+            });
+
+            // 接続管理モーダルのリストも更新
+            updateProfileListInModal(message.profiles);
+        }
+
+        function updateProfileListInModal(profiles) {
+            const container = document.getElementById('profileListContainer');
+            if (!container) return;
+
+            if (profiles.length === 0) {
+                container.innerHTML = '<p style="color: var(--vscode-descriptionForeground);">接続プロファイルがありません</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            profiles.forEach(profile => {
+                const item = document.createElement('div');
+                item.className = 'profile-item';
+                item.innerHTML = \`
+                    <div class="profile-info">
+                        <div class="profile-name">\${profile.name}</div>
+                        <div class="profile-details">
+                            \${profile.type.toUpperCase()} - \${profile.username}@\${profile.host}:\${profile.port}/\${profile.database}
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button onclick="editProfile('\${profile.id}')">編集</button>
+                        <button class="secondary" onclick="deleteProfile('\${profile.id}')">削除</button>
+                    </div>
+                \`;
+                container.appendChild(item);
             });
         }
 
@@ -651,7 +1026,88 @@ export class DatabaseClientPanel {
         }
 
         function openConnectionManager() {
-            showMessage('接続管理機能は実装中です', 'info');
+            document.getElementById('connectionManagerModal').className = 'modal show';
+            vscode.postMessage({ type: 'getProfiles' });
+        }
+
+        function closeConnectionManager() {
+            document.getElementById('connectionManagerModal').className = 'modal';
+        }
+
+        function showAddProfileForm() {
+            document.getElementById('profileFormTitle').textContent = '接続プロファイルを追加';
+            document.getElementById('profileForm').reset();
+            document.getElementById('profileId').value = '';
+            document.getElementById('profileType').value = 'mysql';
+            document.getElementById('profilePort').value = '3306';
+            document.getElementById('profileFormModal').className = 'modal show';
+        }
+
+        function editProfile(profileId) {
+            const select = document.getElementById('profileSelect');
+            let profile = null;
+            
+            // 現在のプロファイル情報を取得（select optionsから推測）
+            for (let option of select.options) {
+                if (option.value === profileId) {
+                    // 実際のデータはバックエンドから取得する必要がある
+                    // 簡易的にフォームを開く
+                    showMessage('編集機能は次のバージョンで実装予定です', 'info');
+                    return;
+                }
+            }
+        }
+
+        function deleteProfile(profileId) {
+            vscode.postMessage({
+                type: 'deleteProfile',
+                data: { profileId }
+            });
+        }
+
+        function closeProfileForm() {
+            document.getElementById('profileFormModal').className = 'modal';
+        }
+
+        function updateDefaultPort() {
+            const type = document.getElementById('profileType').value;
+            const portInput = document.getElementById('profilePort');
+            if (type === 'mysql') {
+                portInput.value = '3306';
+            } else if (type === 'postgresql') {
+                portInput.value = '5432';
+            }
+        }
+
+        function saveProfile(event) {
+            event.preventDefault();
+
+            const profileId = document.getElementById('profileId').value;
+            const profile = {
+                name: document.getElementById('profileName').value,
+                type: document.getElementById('profileType').value,
+                host: document.getElementById('profileHost').value,
+                port: parseInt(document.getElementById('profilePort').value),
+                database: document.getElementById('profileDatabase').value,
+                username: document.getElementById('profileUsername').value,
+                ssl: document.getElementById('profileSsl').checked
+            };
+            const password = document.getElementById('profilePassword').value;
+
+            if (profileId) {
+                // 更新
+                profile.id = profileId;
+                vscode.postMessage({
+                    type: 'updateProfile',
+                    data: { profile, password: password || undefined }
+                });
+            } else {
+                // 新規追加
+                vscode.postMessage({
+                    type: 'addProfile',
+                    data: { profile, password }
+                });
+            }
         }
 
         function getTableSchema() {
