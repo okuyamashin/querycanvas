@@ -96,9 +96,14 @@ export class SessionStateManager {
      * 現在の状態を取得
      */
     getState(): SessionState {
-        // ファイルから最新の状態を読み込み
-        this.loadState();
         return { ...this.currentState };
+    }
+
+    /**
+     * 状態をファイルから再読み込み（外部変更を反映）
+     */
+    reloadState(): void {
+        this.loadState();
     }
 
     /**

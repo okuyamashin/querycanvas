@@ -149,21 +149,30 @@ export class DatabaseClientPanel {
             'db-client-session.json'
         );
 
-        // ファイル監視を開始
+        console.log('[DatabaseClientPanel] Watching session file:', sessionFilePath.fsPath);
+
+        // ファイル監視を開始（グロブパターンを使用）
+        const pattern = new vscode.RelativePattern(
+            workspaceFolders[0],
+            '.vscode/db-client-session.json'
+        );
+        
         this._sessionFileWatcher = vscode.workspace.createFileSystemWatcher(
-            sessionFilePath.fsPath,
+            pattern,
             false, // create イベントを監視
             false, // change イベントを監視
             true   // delete イベントは無視
         );
 
         // ファイルが変更された時
-        this._sessionFileWatcher.onDidChange(() => {
+        this._sessionFileWatcher.onDidChange((uri) => {
+            console.log('[DatabaseClientPanel] File changed:', uri.fsPath);
             this._onSessionFileChanged();
         });
 
         // ファイルが作成された時（初回保存時）
-        this._sessionFileWatcher.onDidCreate(() => {
+        this._sessionFileWatcher.onDidCreate((uri) => {
+            console.log('[DatabaseClientPanel] File created:', uri.fsPath);
             this._onSessionFileChanged();
         });
 
@@ -175,8 +184,13 @@ export class DatabaseClientPanel {
      */
     private _onSessionFileChanged() {
         try {
-            // セッション状態を再読み込み
+            console.log('[DatabaseClientPanel] Session file changed, reloading...');
+            
+            // セッション状態をファイルから再読み込み
+            this._sessionManager.reloadState();
             const state = this._sessionManager.getState();
+            
+            console.log('[DatabaseClientPanel] Reloaded SQL:', state.sqlInput?.substring(0, 50));
             
             // WebviewにSQL内容を更新（外部変更のみ反映）
             this.sendMessage({
