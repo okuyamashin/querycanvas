@@ -250,6 +250,9 @@ export class DatabaseClientPanel {
                 throw new Error('クエリが見つかりません');
             }
 
+            // セッションにSQLを保存
+            this._sessionManager.updateSqlInput(query.sql);
+
             // SQL入力欄に読み込み
             this.sendMessage({
                 type: 'queryLoaded',
@@ -1992,7 +1995,14 @@ export class DatabaseClientPanel {
             if (message.type === 'queryLoaded' && message.success) {
                 document.getElementById('sqlInput').value = message.query.sql;
                 closeSavedQueries();
-                showMessage(\`クエリ "\${message.query.name}" を読み込みました\`, 'success');
+                
+                // デバウンスタイマーをクリア（既にセッション保存済み）
+                if (sqlInputDebounceTimer) {
+                    clearTimeout(sqlInputDebounceTimer);
+                    sqlInputDebounceTimer = null;
+                }
+                
+                showMessage(\`クエリ "\${message.query.name}" を読み込みました（編集可能）\`, 'success');
             } else if (message.type === 'querySaved' && message.success) {
                 showMessage('クエリを保存しました', 'success');
             } else if (message.type === 'queryDeleted' && message.success) {
