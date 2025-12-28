@@ -2,65 +2,63 @@
 
 A database client extension for Cursor/VS Code. Supports MySQL/PostgreSQL with AI-powered schema documentation and query management features designed for seamless integration with Cursor AI.
 
-**日本語** | [English](#english-documentation)
+## Features
 
-## 主な機能 / Main Features
+### 🗄️ Database Connection
+- **Multiple Connections**: Manage connections for development, staging, production environments
+- **MySQL Support**: Supports MySQL 5.7+, 8.0+
+- **PostgreSQL Support**: Supports PostgreSQL 12+
+- **Secure Authentication**: Passwords securely stored in VS Code Secret Storage
 
-### 🗄️ データベース接続 / Database Connection
-- **複数接続管理 / Multiple Connections**: 開発・ステージング・本番など、複数のデータベース接続を管理 / Manage connections for development, staging, production
-- **MySQL対応 / MySQL Support**: MySQL 5.7+, 8.0+ をサポート / Supports MySQL 5.7+, 8.0+
-- **PostgreSQL対応 / PostgreSQL Support**: PostgreSQL 12+ をサポート / Supports PostgreSQL 12+
-- **セキュアな認証 / Secure Authentication**: パスワードはVS Code Secret Storageに安全に保存 / Passwords securely stored in VS Code Secret Storage
+### 📊 SQL Query Execution
+- **Intuitive UI**: SQL input area and result display table
+- **Performance Measurement**: Monitor query performance
+- **Error Handling**: Clear error messages
 
-### 📊 SQLクエリ実行 / SQL Query Execution
-- **直感的なUI / Intuitive UI**: SQL入力エリアと結果表示テーブル / SQL input area and result display table
-- **実行時間計測 / Performance Measurement**: クエリのパフォーマンスを確認 / Monitor query performance
-- **エラーハンドリング / Error Handling**: わかりやすいエラーメッセージ / Clear error messages
+### 📋 Automated Schema Documentation ⭐
+- Automatically extract table structures
+- Generate documentation in Markdown format (`db-schema/tables/`)
+- Add logical names and descriptions with Cursor AI
+- Preserves your additions during re-extraction
+- Auto-extracts foreign keys and indexes
 
-### 📋 テーブル定義の自動ドキュメント化 / Automated Schema Documentation ⭐
-- テーブル構造を自動取得 / Automatically extract table structures
-- Markdown形式でドキュメント生成（`db-schema/tables/`）/ Generate documentation in Markdown format
-- 論理名・説明をCursor AIと会話しながら追記可能 / Add logical names and descriptions with Cursor AI
-- 再取得時に追記した情報を保持 / Preserves your additions during re-extraction
-- 外部キー、インデックス情報も自動抽出 / Auto-extracts foreign keys and indexes
+### 💾 Query Result Saving ⭐
+- Export in **TSV/JSON** format
+- Manage with names and comments (`query-results/`)
+- Automatically records metadata (SQL, timestamp, row count)
+- Analyze saved data with Cursor AI
 
-### 💾 クエリ結果の保存 / Query Result Saving ⭐
-- **TSV/JSON形式**でエクスポート / Export in TSV/JSON format
-- 名前とコメント付きで管理（`query-results/`）/ Manage with names and comments
-- メタデータ（実行SQL、日時、行数）を自動記録 / Automatically records metadata
-- 保存したデータをCursor AIで分析可能 / Analyze saved data with Cursor AI
+### 💾 Saved Query Library ⭐
+- Save frequently-used queries with names
+- Categorize and search with tags
+- Cache query results
+- Instant display next time (no database connection needed)
 
-### 💾 保存済みクエリライブラリ / Saved Query Library ⭐
-- よく使うクエリを名前付きで保存 / Save frequently-used queries with names
-- タグで分類・検索 / Categorize and search with tags
-- クエリ結果をキャッシュ / Cache query results
-- 次回は瞬時に表示（データベース接続不要）/ Instant display next time (no database connection needed)
+### 🔄 Session Persistence ⭐
+- Auto-save SQL input
+- Continue work even after closing panel
+- Cursor can edit session file
+- Real-time SQL sync (Cursor ↔ UI)
 
-### 🔄 セッション永続化 / Session Persistence ⭐
-- SQL入力内容を自動保存 / Auto-save SQL input
-- パネルを閉じても作業を継続可能 / Continue work even after closing panel
-- Cursorがセッションファイルを編集可能 / Cursor can edit session file
-- リアルタイムSQL同期（Cursor ↔ UI）/ Real-time SQL sync (Cursor ↔ UI)
+### 🌍 Multilingual Support
+- **English** (Default)
+- **Japanese**
+- Automatically adapts to VS Code language settings
 
-### 🌍 多言語対応 / Multilingual Support
-- **英語 / English** (Default)
-- **日本語 / Japanese**
-- VS Codeの言語設定に自動対応 / Automatically adapts to VS Code language settings
+## Screenshot
 
-## スクリーンショット
-
-### データベースクライアントパネル
+### Database Client Panel
 ```
 ┌─────────────────────────────────────────┐
-│ 接続: [開発DB ▼] 状態: ●接続中           │
-│ [⚙️ 接続管理] [📋 テーブル定義] [📁 データ] │
+│ Connection: [Dev DB ▼] Status: ●Connected│
+│ [⚙️ Manage] [📋 Schema] [💾 Saved]       │
 ├─────────────────────────────────────────┤
-│ SQL入力エリア                            │
+│ SQL Input Area                          │
 │ SELECT * FROM users;                    │
 │                                         │
-│ [実行 ▶]  [クリア]  [💾 結果を保存]     │
+│ [Execute ▶]  [Clear]  [💾 Save Result]  │
 ├─────────────────────────────────────────┤
-│ 結果テーブル                             │
+│ Result Table                            │
 │ ┌────┬────────┬─────────┐              │
 │ │ id │ name   │ email   │              │
 │ ├────┼────────┼─────────┤              │
@@ -68,180 +66,189 @@ A database client extension for Cursor/VS Code. Supports MySQL/PostgreSQL with A
 │ │ 2  │ Bob    │ b@ex.com│              │
 │ └────┴────────┴─────────┘              │
 │                                         │
-│ 実行時間: 0.123秒 | 行数: 2             │
+│ Execution time: 0.123s | Rows: 2        │
 └─────────────────────────────────────────┘
 ```
 
-## 使い方
+## Usage
 
-### 1. データベースクライアントを開く
+### 1. Open Database Client
 
-1. コマンドパレット（`Cmd+Shift+P` / `Ctrl+Shift+P`）を開く
-2. 「**Database Client: Open**」と入力して実行
-3. データベースクライアントパネルが開きます
+1. Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
+2. Type "**Database Client: Open**" and execute
+3. Database client panel will open
 
-### 2. データベースに接続
+### 2. Connect to Database
 
-1. 「⚙️ 接続管理」ボタンをクリック
-2. 「+ 新しい接続を追加」
-3. 接続情報を入力して保存
-4. ドロップダウンから接続を選択
-5. 「接続」ボタンをクリック
+1. Click "⚙️ Manage Connections" button
+2. Click "+ Add New Connection"
+3. Enter connection information and save
+4. Select connection from dropdown
+5. Click "Connect" button
 
-### 3. SQLクエリを実行
+### 3. Execute SQL Query
 
-1. SQL入力エリアにクエリを入力
-2. 「▶ 実行」ボタンをクリック
-3. 結果がテーブルに表示されます
+1. Enter query in SQL input area
+2. Click "▶ Execute" button
+3. Results will be displayed in the table
 
-### 4. クエリ結果を保存
+### 4. Save Query Results
 
-1. クエリを実行後、「💾 結果を保存」ボタンをクリック
-2. 名前、コメント、保存形式（TSV/JSON）を入力
-3. 「💾 保存」ボタンで `query-results/` に保存されます
-4. メタデータファイルで過去の保存結果を管理可能
+1. After executing a query, click "💾 Save Result" button
+2. Enter name, comment, and format (TSV/JSON)
+3. Click "💾 Save" to save to `query-results/`
+4. Manage past results via metadata file
 
-### 5. テーブル定義を取得
+### 5. Extract Schema
 
-1. データベースに接続
-2. 「📋 テーブル定義」ボタンをクリック
-3. すべてのテーブル定義が `db-schema/tables/` にMarkdownで保存されます
-4. Cursor AIと会話しながら、論理名や説明を追記
-5. 再取得時にも追記した情報は保持されます
+1. Connect to database
+2. Click "📋 Extract Schema" button
+3. All table definitions are saved to `db-schema/tables/` in Markdown format
+4. Add logical names and descriptions with Cursor AI
+5. Your additions are preserved during re-extraction
 
-## 実装状況
+## Implementation Status
 
-### ✅ 完了
-- 基本的なWebviewパネル
-- データベース接続レイヤー（MySQL/PostgreSQL）
-- インターフェースベースの設計
-- SSL接続サポート
-- **接続プロファイル管理**（追加・編集・削除）
-- **パスワード管理**（Secret Storage）
-- **実際のクエリ実行機能**
-- **テーブル定義取得＆Markdownドキュメント生成**
-- **クエリ結果の保存機能**（TSV/JSON + メタデータ）
+### ✅ Completed
+- Basic Webview panel
+- Database connection layer (MySQL/PostgreSQL)
+- Interface-based design
+- SSL connection support
+- **Connection profile management** (add, edit, delete)
+- **Password management** (Secret Storage)
+- **Actual query execution**
+- **Schema extraction & Markdown documentation generation**
+- **Query result saving** (TSV/JSON + metadata)
+- **Session persistence** (auto-save, file watching)
+- **Saved query library** (with caching)
+- **Internationalization** (English/Japanese)
 
-### 📋 今後の予定
-- クエリ履歴機能
-- お気に入りクエリの保存
-- オートコンプリート（テーブル名・カラム名）
-- ER図の自動生成
-- データセットの差分表示
+### 📋 Future Plans
+- Query history
+- Auto-complete (table/column names)
+- ER diagram generation
+- Dataset diff view
 
-## 開発方法
+## Development
 
-### セットアップ
+### Setup
 
-1. 依存関係のインストール:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. TypeScriptのコンパイル:
+2. Compile TypeScript:
 ```bash
 npm run compile
 ```
 
-または、ウォッチモードで自動コンパイル:
+Or use watch mode for automatic compilation:
 ```bash
 npm run watch
 ```
 
-### デバッグと実行
+### Debug and Run
 
-1. VS Code/Cursorでこのプロジェクトを開く
-2. `F5` キーを押す（または「実行」→「デバッグの開始」）
-3. 新しいウィンドウ（Extension Development Host）が開きます
-4. コマンドパレット（`Cmd+Shift+P` / `Ctrl+Shift+P`）を開く
-5. "Hello World" と入力してコマンドを実行
+1. Open this project in VS Code/Cursor
+2. Press `F5` (or "Run" → "Start Debugging")
+3. A new window (Extension Development Host) will open
+4. Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
+5. Type "Database Client: Open" and execute
 
-### プロジェクト構造
+### Project Structure
 
 ```
 vsex001/
 ├── src/
-│   ├── extension.ts                    # 拡張機能のエントリーポイント
-│   ├── databaseClientPanel.ts          # Webview UIの管理
-│   ├── schemaDocumentGenerator.ts      # スキーマドキュメント生成
-│   ├── queryResultSaver.ts             # クエリ結果保存機能
-│   └── database/                       # データベース接続レイヤー
-│       ├── types.ts                    # 型定義とインターフェース
-│       ├── mysqlConnection.ts          # MySQL実装
-│       ├── postgresqlConnection.ts     # PostgreSQL実装
-│       ├── connectionFactory.ts        # 接続ファクトリー
-│       ├── connectionProfileManager.ts # プロファイル管理
+│   ├── extension.ts                    # Extension entry point
+│   ├── databaseClientPanel.ts          # Webview UI management
+│   ├── schemaDocumentGenerator.ts      # Schema document generation
+│   ├── queryResultSaver.ts             # Query result saving
+│   ├── sessionStateManager.ts          # Session persistence
+│   ├── savedQueryManager.ts            # Saved query library
+│   ├── i18nManager.ts                  # Internationalization
+│   ├── i18n/                           # Translation files
+│   │   ├── en.json                     # English
+│   │   └── ja.json                     # Japanese
+│   └── database/                       # Database connection layer
+│       ├── types.ts                    # Type definitions
+│       ├── mysqlConnection.ts          # MySQL implementation
+│       ├── postgresqlConnection.ts     # PostgreSQL implementation
+│       ├── connectionFactory.ts        # Connection factory
+│       ├── connectionProfileManager.ts # Profile management
 │       └── index.ts
-├── docs/                               # ドキュメント
-│   ├── conversations/                  # 会話履歴
-│   └── specifications/                 # 仕様書
-├── db-schema/                          # テーブル定義（自動生成）
-│   └── tables/                         # テーブルごとのMarkdown
-├── query-results/                      # 保存されたクエリ結果
-│   └── metadata.json                   # クエリ結果のメタデータ
-├── out/                                # コンパイル済みJavaScript
+├── docs/                               # Documentation
+│   ├── conversations/                  # Development history
+│   └── specifications/                 # Specifications
+├── db-schema/                          # Table definitions (auto-generated)
+│   └── tables/                         # Markdown per table
+├── query-results/                      # Saved query results
+│   └── metadata.json                   # Query result metadata
+├── out/                                # Compiled JavaScript
 ├── .vscode/
-│   ├── launch.json                     # デバッグ設定
-│   ├── tasks.json                      # ビルドタスク設定
-│   └── db-connections.json             # 接続プロファイル（gitignore）
-├── package.json                        # 拡張機能のマニフェスト
-├── tsconfig.json                       # TypeScript設定
-├── TESTING.md                          # テスト手順
-└── README.md                           # このファイル
+│   ├── launch.json                     # Debug configuration
+│   ├── tasks.json                      # Build task configuration
+│   ├── db-connections.json             # Connection profiles (gitignored)
+│   ├── db-client-session.json          # Session state (gitignored)
+│   └── saved-queries.json              # Saved queries (gitignored)
+├── package.json                        # Extension manifest
+├── tsconfig.json                       # TypeScript configuration
+├── TESTING.md                          # Testing instructions
+└── README.md                           # This file
 ```
 
-## 技術スタック
+## Technology Stack
 
-- **TypeScript 5.3+**: 型安全な開発
-- **VS Code Extension API**: 拡張機能の基盤
-- **mysql2**: MySQL Node.jsクライアント（Promise対応）
-- **pg**: PostgreSQL Node.jsクライアント
-- **Webview**: カスタムUIの実装
+- **TypeScript 5.3+**: Type-safe development
+- **VS Code Extension API**: Extension foundation
+- **mysql2**: MySQL Node.js client (Promise-based)
+- **pg**: PostgreSQL Node.js client
+- **Webview**: Custom UI implementation
 
-## アーキテクチャ
+## Architecture
 
-### デザインパターン
-- **Strategy Pattern**: データベースタイプに応じた実装の切り替え
-- **Factory Pattern**: 接続インスタンスの生成
-- **Interface Segregation**: 共通インターフェースで統一
+### Design Patterns
+- **Strategy Pattern**: Switch implementations based on database type
+- **Factory Pattern**: Generate connection instances
+- **Interface Segregation**: Unified common interface
 
-### セキュリティ
-- パスワードはVS Code Secret Storageに保存
-- パラメータ化クエリでSQLインジェクション対策
-- SSL接続のサポート
+### Security
+- Passwords stored in VS Code Secret Storage
+- Parameterized queries to prevent SQL injection
+- SSL connection support
 
-## ドキュメント
+## Documentation
 
-- [TESTING.md](./TESTING.md) - テスト・デバッグ手順
-- [仕様書](./docs/specifications/) - 機能仕様とアーキテクチャ
-- [会話履歴](./docs/conversations/) - 開発の経緯
+- [TESTING.md](./TESTING.md) - Testing and debugging procedures
+- [Specifications](./docs/specifications/) - Feature specifications and architecture
+- [Conversation History](./docs/conversations/) - Development process
 
-## カスタマイズ
+## Customization
 
-### 新しいデータベースタイプの追加
+### Adding a New Database Type
 
-1. `src/database/types.ts` に新しいタイプを追加
-2. `IDBConnection` インターフェースを実装した新しいクラスを作成
-3. `ConnectionFactory` に新しいケースを追加
+1. Add new type to `src/database/types.ts`
+2. Create a new class implementing the `IDBConnection` interface
+3. Add new case to `ConnectionFactory`
 
-詳細は[データベース接続レイヤー仕様](./docs/specifications/database-connection-layer.md)を参照してください。
+See [Database Connection Layer Specification](./docs/specifications/database-connection-layer.md) for details.
 
-## 参考リンク
+## References
 
 - [VS Code Extension API](https://code.visualstudio.com/api)
 - [Extension Guides](https://code.visualstudio.com/api/extension-guides/overview)
 - [mysql2 Documentation](https://github.com/sidorares/node-mysql2)
 - [node-postgres Documentation](https://node-postgres.com/)
 
-## ライセンス
+## License
 
-このプロジェクトはサンプルプロジェクトです。
+This is a sample project.
 
-## 作者
+## Author
 
 okuyama
 
-## リポジトリ
+## Repository
 
 https://github.com/okuyamashin/vsex001
-
