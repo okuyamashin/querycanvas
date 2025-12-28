@@ -942,15 +942,40 @@ export class DatabaseClientPanel {
             color: var(--vscode-foreground);
             background-color: var(--vscode-editor-background);
             padding: 20px;
+            padding-bottom: 80px; /* フッター分の余白 */
         }
 
-        .header {
+        .toolbar {
             display: flex;
             gap: 10px;
-            align-items: center;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--vscode-panel-border);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--vscode-editor-background);
+            border-top: 2px solid var(--vscode-panel-border);
+            padding: 10px 20px;
+            z-index: 100;
+        }
+
+        .connection-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .connection-area.disconnected {
+            display: flex;
+        }
+
+        .connection-area.connected {
+            display: none;
         }
 
         .connection-status {
@@ -958,7 +983,14 @@ export class DatabaseClientPanel {
             width: 10px;
             height: 10px;
             border-radius: 50%;
+        }
+
+        .connection-status.disconnected {
             background-color: var(--vscode-testing-iconFailed);
+        }
+
+        .connection-status.connected {
+            background-color: var(--vscode-testing-iconPassed);
         }
 
         .connection-status.connected {
@@ -1213,15 +1245,8 @@ export class DatabaseClientPanel {
     </style>
 </head>
 <body>
-    <div class="header">
-        <span class="connection-status" id="connectionStatus"></span>
-        <span id="connectionText">未接続</span>
-        <select id="profileSelect" style="margin-left: 10px; padding: 4px;">
-            <option value="">接続を選択...</option>
-        </select>
-        <button onclick="connectToDatabase()">接続</button>
-        <button onclick="disconnectFromDatabase()">切断</button>
-        <button onclick="openConnectionManager()">⚙️ 接続管理</button>
+    <!-- 上部：機能ボタン -->
+    <div class="toolbar">
         <button onclick="getTableSchema()">📋 テーブル定義</button>
         <button onclick="openSavedQueries()">💾 保存済みクエリ</button>
     </div>
@@ -1243,6 +1268,26 @@ export class DatabaseClientPanel {
         <div class="section-title">実行結果</div>
         <div id="resultTable"></div>
         <div class="result-info" id="resultInfo"></div>
+    </div>
+
+    <!-- 下部：接続情報（未接続時） -->
+    <div class="footer" id="connectionFooter">
+        <div class="connection-area disconnected" id="disconnectedArea">
+            <span class="connection-status disconnected" id="connectionStatus"></span>
+            <span id="connectionText">未接続</span>
+            <select id="profileSelect">
+                <option value="">接続を選択...</option>
+            </select>
+            <button onclick="connectToDatabase()">接続</button>
+            <button onclick="openConnectionManager()">⚙️ 接続管理</button>
+        </div>
+        
+        <!-- 接続時 -->
+        <div class="connection-area connected" id="connectedArea" style="display: none;">
+            <span class="connection-status connected"></span>
+            <span id="connectedText">接続中: </span>
+            <button onclick="disconnectFromDatabase()" class="secondary">切断</button>
+        </div>
     </div>
 
     <!-- 接続管理モーダル -->
@@ -1564,11 +1609,10 @@ export class DatabaseClientPanel {
                 isConnected = true;
                 currentProfileId = message.profileId;
                 
-                const statusElem = document.getElementById('connectionStatus');
-                const textElem = document.getElementById('connectionText');
-                
-                statusElem.className = 'connection-status connected';
-                textElem.textContent = \`\${message.profileName} に接続中\`;
+                // 接続時の表示に切り替え
+                document.getElementById('disconnectedArea').style.display = 'none';
+                document.getElementById('connectedArea').style.display = 'flex';
+                document.getElementById('connectedText').textContent = \`接続中: \${message.profileName}\`;
                 
                 showMessage('データベースに接続しました', 'success');
             } else {
@@ -1582,11 +1626,9 @@ export class DatabaseClientPanel {
                 isConnected = false;
                 currentProfileId = null;
                 
-                const statusElem = document.getElementById('connectionStatus');
-                const textElem = document.getElementById('connectionText');
-                
-                statusElem.className = 'connection-status';
-                textElem.textContent = '未接続';
+                // 未接続時の表示に切り替え
+                document.getElementById('disconnectedArea').style.display = 'flex';
+                document.getElementById('connectedArea').style.display = 'none';
                 
                 showMessage('データベースから切断しました', 'success');
             } else {
