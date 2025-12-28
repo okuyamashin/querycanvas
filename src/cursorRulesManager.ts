@@ -158,10 +158,24 @@ When generating SQL with display options, follow these rules EXACTLY:
 - Example: \`@row 曜日=="土":bg=#eeeeff\`
 - Example: \`@row 売上>1000000:bg=#ccffcc,bold=true\`
 
+### @chart directive (graph visualization) 🆕
+\`\`\`sql
+@chart type=line x=日付 y=売上,利益
+@chart type=mixed x=月 y=売上:bar,目標:line
+\`\`\`
+- **Required:** \`type\`, \`x\` (or \`xAxis\`), \`y\` (or \`yAxis\`)
+- **Chart types:** \`line\`, \`bar\`, \`pie\`, \`area\`, \`scatter\`, \`mixed\`
+- **Y-axis:** Comma-separated for multiple series (e.g., \`y=店舗A,店舗B,店舗C\`)
+- **Mixed charts:** Specify type for each series: \`y=売上:bar,目標:line,達成率:line\`
+- **Optional:** \`title="タイトル"\`, \`legend=true\`, \`grid=true\`, \`stacked=true\`, \`curve=smooth\`
+- Example: \`@chart type=line x=日付 y=小村井店,京成小岩店 title="店舗別売上推移"\`
+- Example: \`@chart type=mixed x=月 y=売上:bar,目標:line title="売上と目標"\`
+
 ### ❌ WRONG Examples
 \`\`\`sql
 @row if 曜日=土:background=#eee     ❌ NO! Has 'if', uses '=', uses 'background'
 @row 国名=フランス:bg=#fee           ❌ NO! No quotes, uses single '='
+@chart x=日付                       ❌ NO! Missing required 'type' and 'y'
 \`\`\`
 
 ### ✅ CORRECT Examples
@@ -169,6 +183,8 @@ When generating SQL with display options, follow these rules EXACTLY:
 @row 曜日=="土":bg=#eee              ✅ YES!
 @row 国名=="フランス":bg=#fee        ✅ YES!
 @row 売上>1000000:bg=#ccffcc         ✅ YES!
+@chart type=line x=日付 y=売上       ✅ YES!
+@chart type=mixed x=月 y=売上:bar,目標:line ✅ YES!
 \`\`\`
 
 ---
@@ -219,6 +235,41 @@ SELECT amount, date FROM sales;
 SELECT 曜日, 売上 FROM daily_sales;
 \`\`\`
 
+#### Graph Visualization 🆕
+\`\`\`sql
+/**
+ * @chart type=line x=日付 y=小村井店,京成小岩店 title="店舗別売上推移"
+ * @row 曜日=="土":bg=#eeeeff
+ * @row 曜日=="日":bg=#ffeeee
+ * @column 小村井店 type=int align=right format=number comma=true color="#FF0000"
+ * @column 京成小岩店 type=int align=right format=number comma=true color="#008800"
+ */
+SELECT 日付, 曜日, 小村井店, 京成小岩店 FROM daily_sales;
+\`\`\`
+
+**Chart types:**
+- \`line\` - Line chart (trends, time-series)
+- \`bar\` - Bar chart (category comparison)
+- \`pie\` - Pie chart (proportions, market share)
+- \`area\` - Area chart (cumulative data)
+- \`scatter\` - Scatter plot (correlations)
+- \`mixed\` - Mixed chart (bar + line): \`y=売上:bar,目標:line\`
+
+**View toggle:**
+- **📊 テーブル** button: Table view
+- **📈 グラフ** button: Chart view
+- **📊 グラフコピー** button: Copy chart as image for PowerPoint
+
+**Mixed chart example:**
+\`\`\`sql
+/**
+ * @chart type=mixed x=月 y=売上:bar,目標:line title="売上実績と目標"
+ * @column 売上 type=int align=right format=number comma=true color="#36A2EB"
+ * @column 目標 type=int align=right format=number comma=true color="#FF6384"
+ */
+SELECT 月, 売上, 目標 FROM monthly_sales;
+\`\`\`
+
 **Common options:**
 - \`align=right\` - Right align (recommended for numbers)
 - \`format=number comma=true\` - Add thousand separators (1,234,567)
@@ -258,7 +309,7 @@ Add row styling to highlight weekends (Saturdays in light blue, Sundays in light
 
 ### PowerPoint/Excel/Word Copy
 
-After executing queries, two copy buttons appear:
+After executing queries, copy buttons appear:
 
 1. **📋 TSVコピー** (Tab-Separated Values)
    - Simple format, works everywhere
@@ -270,6 +321,17 @@ After executing queries, two copy buttons appear:
    - Conditional styling maintained
    - Row styling maintained
    - Perfect for presentations
+
+3. **📊 グラフコピー** (Chart as image) 🆕
+   - Available when \`@chart\` directive is used
+   - Copy chart as PNG image
+   - Paste directly into PowerPoint/Word/Keynote
+   - Includes title, legend, colors, and all styling
+
+**Example workflow for charts:**
+\`\`\`
+Create query with @chart → Execute → Click 📈 グラフ → Click 📊 グラフコピー → Paste in PowerPoint
+\`\`\`
 
 **Example workflow:**
 \`\`\`
@@ -288,6 +350,14 @@ Generate a presentation-ready query for monthly sales. Use display options to ma
 
 \`\`\`
 Create a report with row styling to highlight high-performing stores (sales > 1M) in green
+\`\`\`
+
+\`\`\`
+Create a sales trend chart query showing store A and store B with line chart
+\`\`\`
+
+\`\`\`
+Generate a mixed chart query with actual sales (bar) and target (line)
 \`\`\`
 
 ### Database Schema
@@ -371,6 +441,19 @@ Generate a sales report query with:
 - Rows with revenue > 1M: green background
 \`\`\`
 
+**Create chart visualization:**
+\`\`\`
+Create a sales trend query with line chart showing last 30 days for store A and B
+\`\`\`
+
+\`\`\`
+Generate a mixed chart query showing monthly sales (bar) and target (line)
+\`\`\`
+
+\`\`\`
+Create a bar chart comparing top 10 products by revenue
+\`\`\`
+
 ### Common Mistakes to Avoid ⚠️
 
 **WRONG:**
@@ -396,6 +479,8 @@ Generate a sales report query with:
 - Display options: See DISPLAY-OPTIONS-QUICK-GUIDE.md
 - Row styling guide: See docs/ROW-STYLING-GUIDE.md
 - PowerPoint copy: See docs/POWERPOINT-COPY-GUIDE.md
+- Chart visualization: See docs/CHART-VISUALIZATION-GUIDE.md 🆕
+- Mixed chart examples: See docs/examples/mixed-chart-examples.sql 🆕
 
 ---
 
