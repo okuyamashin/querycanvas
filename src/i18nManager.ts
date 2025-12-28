@@ -21,19 +21,26 @@ export class I18nManager {
      */
     private loadTranslations(): Translations {
         try {
+            // コンパイル後はout/ディレクトリなので、out/i18n/を探す
             const filePath = path.join(__dirname, 'i18n', `${this.locale}.json`);
+            console.log(`[I18nManager] Loading translations from: ${filePath}`);
             const content = fs.readFileSync(filePath, 'utf-8');
-            return JSON.parse(content);
+            const translations = JSON.parse(content);
+            console.log(`[I18nManager] Successfully loaded ${this.locale} translations`);
+            return translations;
         } catch (error) {
-            console.error(`Failed to load translations for ${this.locale}:`, error);
+            console.error(`[I18nManager] Failed to load translations for ${this.locale}:`, error);
             // フォールバックとして英語を試す
             if (this.locale !== 'en') {
                 try {
                     const fallbackPath = path.join(__dirname, 'i18n', 'en.json');
+                    console.log(`[I18nManager] Trying fallback: ${fallbackPath}`);
                     const content = fs.readFileSync(fallbackPath, 'utf-8');
-                    return JSON.parse(content);
+                    const translations = JSON.parse(content);
+                    console.log(`[I18nManager] Successfully loaded fallback (en) translations`);
+                    return translations;
                 } catch (fallbackError) {
-                    console.error('Failed to load fallback translations:', fallbackError);
+                    console.error('[I18nManager] Failed to load fallback translations:', fallbackError);
                     return {};
                 }
             }
