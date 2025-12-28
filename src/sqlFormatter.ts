@@ -104,12 +104,21 @@ export class SqlFormatter {
         formatted = formatted.replace(/\(\s+/g, '(');
         formatted = formatted.replace(/\s+\)/g, ')');
 
-        // 8. カンマ後のスペース調整（括弧内は除く）
-        formatted = formatted.replace(/,(?!\s)/g, ', ');
+        // 8. カンマ後のスペース調整（行内のスペースのみ）
+        // 改行は保持する
+        const formattedLines = formatted.split('\n');
+        formatted = formattedLines.map(line => {
+            return line.replace(/,(?!\s)/g, ', ');
+        }).join('\n');
 
-        // 9. 演算子の前後にスペース
-        formatted = formatted.replace(/([=<>!]+)/g, ' $1 ');
-        formatted = formatted.replace(/\s+/g, ' ');
+        // 9. 演算子の前後にスペース（行内のスペースのみ調整）
+        formatted = formatted.split('\n').map(line => {
+            // 演算子の前後にスペースを追加
+            line = line.replace(/([=<>!]+)/g, ' $1 ');
+            // 連続する空白を1つに（改行は含まない）
+            line = line.replace(/[ \t]+/g, ' ');
+            return line.trim();
+        }).join('\n');
 
         // 10. コメントを復元
         comments.forEach((comment, index) => {
