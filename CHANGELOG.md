@@ -5,6 +5,41 @@ All notable changes to the "QueryCanvas" extension will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-12-28
+
+### Added
+- **🎨 Row Styling Feature** 🆕: Style entire rows based on column values
+  - New `@row` directive for row-level styling
+  - String comparison with quoted values: `@row 曜日=="土":bg=#eeeeff`
+  - Numeric comparison: `@row 売上>1000000:bg=#ccffcc,bold=true`
+  - Status-based styling: `@row ステータス=="完了":bg=#d4edda,color=#155724`
+  - HTML Copy preserves row styling for PowerPoint/Excel/Word
+  - Comprehensive guide: `docs/ROW-STYLING-GUIDE.md`
+  - 10 practical examples: `docs/examples/row-styling-examples.sql`
+- **📝 Enhanced Cursor AI Integration**
+  - Updated `.cursorrules` with detailed row styling syntax at the top
+  - "MOST IMPORTANT" section with correct/wrong examples
+  - Syntax comparison table (column vs row styling)
+  - Common mistakes section with real-world examples
+  - Final reminder section at the bottom
+- **Cursor AI Setup Button** relocated to connection area
+  - Now appears with "接続" and "接続管理" buttons
+  - Updated template with full row styling documentation
+
+### Changed
+- **Execute Button Improvement**: Disabled during query execution
+  - Button text changes to "⏳ 実行中..." while running
+  - Prevents double-click/multiple execution
+  - Re-enabled automatically after completion
+- Updated `cursorRulesManager.ts` template with row styling syntax
+- Enhanced `DISPLAY-OPTIONS-QUICK-GUIDE.md` with row styling section
+
+### Documentation
+- Added comprehensive row styling guide
+- Added implementation conversation log
+- Updated all display options documentation
+- Clarified syntax differences between `@column` and `@row` directives
+
 ## [Unreleased]
 
 ### Added
