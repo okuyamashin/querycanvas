@@ -4,6 +4,7 @@ import { SchemaDocumentGenerator } from './schemaDocumentGenerator';
 import { QueryResultSaver } from './queryResultSaver';
 import { SessionStateManager } from './sessionStateManager';
 import { AutoQueryResultSaver } from './autoQueryResultSaver';
+import { SavedQueryManager } from './savedQueryManager';
 
 /**
  * データベースクライアントのWebviewパネルを管理するクラス
@@ -16,6 +17,7 @@ export class DatabaseClientPanel {
     private readonly _profileManager: ConnectionProfileManager;
     private readonly _sessionManager: SessionStateManager;
     private readonly _autoSaver: AutoQueryResultSaver;
+    private readonly _queryManager: SavedQueryManager;
     private _disposables: vscode.Disposable[] = [];
     private _currentConnection: IDBConnection | null = null;
     private _sessionFileWatcher: vscode.FileSystemWatcher | null = null;
@@ -25,6 +27,7 @@ export class DatabaseClientPanel {
         this._profileManager = profileManager;
         this._sessionManager = new SessionStateManager();
         this._autoSaver = new AutoQueryResultSaver();
+        this._queryManager = new SavedQueryManager();
 
         // パネルのコンテンツを設定
         this._panel.webview.html = this._getHtmlContent();
@@ -190,6 +193,116 @@ export class DatabaseClientPanel {
     }
 
     /**
+     * 保存されたクエリ一覧を取得
+     */
+    private _handleGetSavedQueries() {
+        const queries = this._queryManager.getAllQueries();
+        this.sendMessage({
+            type: 'savedQueriesList',
+            queries
+        });
+    }
+
+    /**
+     * 名前付きクエリを保存
+     */
+    private _handleSaveNamedQuery(data: any) {
+        try {
+            const savedQuery = this._queryManager.saveQuery({
+                name: data.name,
+                description: data.description || '',
+                sql: data.sql,
+                tags: data.tags || []
+            });
+
+            vscode.window.showInformationMessage(`クエリ "${savedQuery.name}" を保存しました`);
+
+            // 更新されたクエリ一覧を送信
+            this._handleGetSavedQueries();
+
+            this.sendMessage({
+                type: 'querySaved',
+                success: true,
+                query: savedQuery
+            });
+
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            vscode.window.showErrorMessage(`クエリ保存エラー: ${errorMessage}`);
+            
+            this.sendMessage({
+                type: 'querySaved',
+                success: false,
+                error: errorMessage
+            });
+        }
+    }
+
+    /**
+     * 名前付きクエリを読み込み
+     */
+    private _handleLoadNamedQuery(data: any) {
+        try {
+            const query = this._queryManager.getQuery(data.queryId);
+            
+            if (!query) {
+                throw new Error('クエリが見つかりません');
+            }
+
+            // SQL入力欄に読み込み
+            this.sendMessage({
+                type: 'queryLoaded',
+                success: true,
+                query
+            });
+
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            vscode.window.showErrorMessage(`クエリ読み込みエラー: ${errorMessage}`);
+            
+            this.sendMessage({
+                type: 'queryLoaded',
+                success: false,
+                error: errorMessage
+            });
+        }
+    }
+
+    /**
+     * 名前付きクエリを削除
+     */
+    private _handleDeleteNamedQuery(data: any) {
+        try {
+            const success = this._queryManager.deleteQuery(data.queryId);
+            
+            if (!success) {
+                throw new Error('クエリが見つかりません');
+            }
+
+            vscode.window.showInformationMessage('クエリを削除しました');
+
+            // 更新されたクエリ一覧を送信
+            this._handleGetSavedQueries();
+
+            this.sendMessage({
+                type: 'queryDeleted',
+                success: true,
+                queryId: data.queryId
+            });
+
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            vscode.window.showErrorMessage(`クエリ削除エラー: ${errorMessage}`);
+            
+            this.sendMessage({
+                type: 'queryDeleted',
+                success: false,
+                error: errorMessage
+            });
+        }
+    }
+
+    /**
      * Webviewからのメッセージを処理
      */
     private _handleMessage(message: any) {
@@ -226,6 +339,18 @@ export class DatabaseClientPanel {
                 break;
             case 'sqlInputChanged':
                 this._handleSqlInputChanged(message.data);
+                break;
+            case 'getSavedQueries':
+                this._handleGetSavedQueries();
+                break;
+            case 'saveNamedQuery':
+                this._handleSaveNamedQuery(message.data);
+                break;
+            case 'loadNamedQuery':
+                this._handleLoadNamedQuery(message.data);
+                break;
+            case 'deleteNamedQuery':
+                this._handleDeleteNamedQuery(message.data);
                 break;
             case 'info':
                 vscode.window.showInformationMessage(message.text);
@@ -991,7 +1116,7 @@ export class DatabaseClientPanel {
         <button onclick="disconnectFromDatabase()">切断</button>
         <button onclick="openConnectionManager()">⚙️ 接続管理</button>
         <button onclick="getTableSchema()">📋 テーブル定義</button>
-        <button onclick="openDataManager()">📁 データ管理</button>
+        <button onclick="openSavedQueries()">💾 保存済みクエリ</button>
     </div>
 
     <div class="section">
@@ -1001,6 +1126,7 @@ export class DatabaseClientPanel {
             <button onclick="executeQuery()">▶ 実行</button>
             <button class="secondary" onclick="clearSQL()">クリア</button>
             <button class="secondary" onclick="saveResult()">💾 結果を保存</button>
+            <button class="secondary" onclick="saveCurrentQuery()">⭐ クエリを保存</button>
         </div>
     </div>
 
@@ -1148,6 +1274,56 @@ export class DatabaseClientPanel {
         </div>
     </div>
 
+    <!-- クエリ保存モーダル -->
+    <div id="saveQueryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>クエリを保存</h2>
+                <button class="close-button" onclick="closeSaveQueryDialog()">&times;</button>
+            </div>
+            
+            <form id="saveQueryForm" onsubmit="submitSaveQuery(event)">
+                <div class="form-group">
+                    <label for="queryName">名前 *</label>
+                    <input type="text" id="queryName" required placeholder="例: ユーザー一覧取得">
+                </div>
+                
+                <div class="form-group">
+                    <label for="queryDescription">説明</label>
+                    <textarea id="queryDescription" rows="3" placeholder="このクエリの目的や用途を記入してください"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="queryTags">タグ（カンマ区切り）</label>
+                    <input type="text" id="queryTags" placeholder="例: ユーザー, 集計, レポート">
+                    <small style="color: var(--vscode-descriptionForeground);">カンマで区切って複数のタグを入力できます</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>SQL</label>
+                    <div style="background-color: var(--vscode-editor-background); padding: 10px; border: 1px solid var(--vscode-panel-border); font-family: 'Courier New', monospace; font-size: 12px; white-space: pre-wrap; word-wrap: break-word; max-height: 200px; overflow-y: auto;" id="saveQuerySql"></div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="secondary" onclick="closeSaveQueryDialog()">キャンセル</button>
+                    <button type="submit">⭐ 保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 保存済みクエリ一覧モーダル -->
+    <div id="savedQueriesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>保存済みクエリ</h2>
+                <button class="close-button" onclick="closeSavedQueries()">&times;</button>
+            </div>
+            
+            <div id="savedQueriesContainer" style="max-height: 60vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
     <script>
         const vscode = acquireVsCodeApi();
         
@@ -1195,6 +1371,14 @@ export class DatabaseClientPanel {
                     break;
                 case 'updateSqlFromFile':
                     handleUpdateSqlFromFile(message);
+                    break;
+                case 'savedQueriesList':
+                    handleSavedQueriesList(message);
+                    break;
+                case 'querySaved':
+                case 'queryLoaded':
+                case 'queryDeleted':
+                    handleQueryOperation(message);
                     break;
             }
         });
@@ -1583,6 +1767,119 @@ export class DatabaseClientPanel {
             setTimeout(() => {
                 messageDiv.remove();
             }, 3000);
+        }
+
+        // クエリ保存関連の関数
+        function saveCurrentQuery() {
+            const sql = document.getElementById('sqlInput').value.trim();
+            if (!sql) {
+                showMessage('SQLクエリを入力してください', 'error');
+                return;
+            }
+
+            document.getElementById('queryName').value = '';
+            document.getElementById('queryDescription').value = '';
+            document.getElementById('queryTags').value = '';
+            document.getElementById('saveQuerySql').textContent = sql;
+            document.getElementById('saveQueryModal').className = 'modal show';
+        }
+
+        function closeSaveQueryDialog() {
+            document.getElementById('saveQueryModal').className = 'modal';
+        }
+
+        function submitSaveQuery(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('queryName').value;
+            const description = document.getElementById('queryDescription').value;
+            const tagsInput = document.getElementById('queryTags').value;
+            const sql = document.getElementById('saveQuerySql').textContent;
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+
+            vscode.postMessage({
+                type: 'saveNamedQuery',
+                data: {
+                    name,
+                    description,
+                    sql,
+                    tags
+                }
+            });
+
+            closeSaveQueryDialog();
+        }
+
+        function openSavedQueries() {
+            document.getElementById('savedQueriesModal').className = 'modal show';
+            vscode.postMessage({ type: 'getSavedQueries' });
+        }
+
+        function closeSavedQueries() {
+            document.getElementById('savedQueriesModal').className = 'modal';
+        }
+
+        function handleSavedQueriesList(message) {
+            const container = document.getElementById('savedQueriesContainer');
+            
+            if (!message.queries || message.queries.length === 0) {
+                container.innerHTML = '<p style="color: var(--vscode-descriptionForeground); padding: 20px;">保存されたクエリがありません</p>';
+                return;
+            }
+
+            let html = '';
+            message.queries.forEach(query => {
+                html += \`
+                    <div class="profile-item" style="margin-bottom: 10px;">
+                        <div class="profile-info" style="flex: 1;">
+                            <div class="profile-name">\${query.name}</div>
+                            <div class="profile-details" style="margin-top: 4px;">
+                                \${query.description || '説明なし'}
+                            </div>
+                            \${query.tags && query.tags.length > 0 ? 
+                                '<div style="margin-top: 4px; font-size: 11px; color: var(--vscode-descriptionForeground);">タグ: ' + query.tags.join(', ') + '</div>' 
+                                : ''}
+                            <div style="margin-top: 8px; font-family: monospace; font-size: 11px; background-color: var(--vscode-editor-background); padding: 8px; border: 1px solid var(--vscode-panel-border); max-height: 100px; overflow-y: auto; white-space: pre-wrap;">
+                                \${query.sql}
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            <button onclick="loadSavedQuery('\${query.id}')">読み込み</button>
+                            <button class="secondary" onclick="deleteSavedQuery('\${query.id}')">削除</button>
+                        </div>
+                    </div>
+                \`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function loadSavedQuery(queryId) {
+            vscode.postMessage({
+                type: 'loadNamedQuery',
+                data: { queryId }
+            });
+        }
+
+        function deleteSavedQuery(queryId) {
+            if (confirm('このクエリを削除してもよろしいですか？')) {
+                vscode.postMessage({
+                    type: 'deleteNamedQuery',
+                    data: { queryId }
+                });
+            }
+        }
+
+        function handleQueryOperation(message) {
+            if (message.type === 'queryLoaded' && message.success) {
+                document.getElementById('sqlInput').value = message.query.sql;
+                closeSavedQueries();
+                showMessage(\`クエリ "\${message.query.name}" を読み込みました\`, 'success');
+            } else if (message.type === 'querySaved' && message.success) {
+                showMessage('クエリを保存しました', 'success');
+            } else if (message.type === 'queryDeleted' && message.success) {
+                showMessage('クエリを削除しました', 'success');
+            }
         }
     </script>
 </body>
