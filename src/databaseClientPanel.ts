@@ -1012,6 +1012,7 @@ export class DatabaseClientPanel {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; img-src data:;">
     <title>Database Client</title>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -1193,11 +1194,13 @@ export class DatabaseClientPanel {
             overflow: auto;
             padding: 20px;
             display: none;
+            min-height: 400px;
+            position: relative;
         }
 
         #chartCanvas {
-            max-width: 100%;
-            max-height: 600px;
+            width: 100% !important;
+            height: 500px !important;
         }
 
         .view-toggle {
@@ -2948,7 +2951,18 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
          * グラフを描画
          */
         function renderChart(columns, rows, chartOptions, displayOptionsMap) {
+            // Chart.jsが読み込まれているか確認
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js is not loaded');
+                showMessage('グラフライブラリが読み込まれていません', 'error');
+                return;
+            }
+
             const canvas = document.getElementById('chartCanvas');
+            if (!canvas) {
+                console.error('Canvas element not found');
+                return;
+            }
             const ctx = canvas.getContext('2d');
 
             // 既存のチャートを破棄
@@ -2995,8 +3009,7 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 2,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: chartOptions.showLegend !== false,
@@ -3043,7 +3056,12 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
             }
 
             // グラフを作成
-            currentChart = new Chart(ctx, config);
+            try {
+                currentChart = new Chart(ctx, config);
+            } catch (error) {
+                console.error('Error creating chart:', error);
+                showMessage('グラフの作成に失敗しました: ' + error.message, 'error');
+            }
         }
 
         /**

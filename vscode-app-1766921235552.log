@@ -1,0 +1,756 @@
+workbench.desktop.main.js:542 This document requires 'TrustedScript' assignment.
+(anonymous) @ workbench.desktop.main.js:542
+workbench.desktop.main.js:542 The JavaScript Function constructor does not accept TrustedString arguments. See https://github.com/w3c/webappsec-trusted-types/wiki/Trusted-Types-for-function-constructor for more information.
+workbench.desktop.main.js:139 Refused to create a TrustedTypePolicy named 'tokenizeToString' because a policy with that name already exists and the Content Security Policy directive does not 'allow-duplicates': "trusted-types amdLoader
+					cellRendererEditorText
+					defaultWorkerFactory
+					diffEditorWidget
+					diffReview
+					domLineBreaksComputer
+					dompurify
+					editorGhostText
+					editorViewLayer
+					notebookRenderer
+					stickyScrollViewLayer
+					tokenizeToString
+					safeInnerHtml
+					editorCppGhostText
+					standaloneColorizer
+					tokenizeToString
+					solidjs
+					aibubble
+					aibubble2
+					aibubbleSearch
+					streamingMarkdownPolicy
+					notebookChatEditController
+					mermaidDiagram
+					mermaidDiagram2
+					mermaidDiagramOuter".
+SQ @ workbench.desktop.main.js:139
+workbench.desktop.main.js:23 Uncaught Error: Failed to execute 'createPolicy' on 'TrustedTypePolicyFactory': Policy with name "tokenizeToString" already exists.
+
+TypeError: Policy with name "tokenizeToString" already exists.
+    at SQ (workbench.desktop.main.js:139:11057)
+    at workbench.desktop.main.js:12033:49688
+    at SQ (workbench.desktop.main.js:139:11057)
+    at workbench.desktop.main.js:12033:49688
+    at workbench.desktop.main.js:25:12
+workbench.desktop.main.js:55  WARN Missing property "rpcFileLoggerFolder" in oldValue. Filling with value from initValue. Please add a migration if necessary.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'ms-toolsai.datawrangler' wants API proposal 'debugFocus' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'ms-vscode.vscode-copilot-data-analysis' wants API proposal 'chatVariableResolver' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'ms-python.python' wants API proposal 'terminalShellType' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'ms-python.vscode-python-envs' wants API proposal 'terminalShellType' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'github.copilot-chat' wants API proposal 'chatReadonlyPromptReference' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'ms-azuretools.vscode-azure-github-copilot' wants API proposal 'lmTools' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'vscjava.vscode-java-pack' wants API proposal 'lmTools' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'apidev.azure-api-center' wants API proposal 'chatParticipant' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN Via 'product.json#extensionEnabledApiProposals' extension 'apidev.azure-api-center' wants API proposal 'languageModels' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:15027 [Extension Host] STOPPED on first line for debugging on port 53199
+_tryFindDebugPort @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR Extension 'ms-toolsai.jupyter' appears in product.json but enables LESS API proposals than the extension wants.
+package.json (LOSES): notebookDeprecated, notebookMessaging, notebookMime, contribNotebookStaticPreloads, portsAttributes, quickPickSortByLabel, notebookKernelSource, interactiveWindow, quickPickItemTooltip, notebookExecution, notebookCellExecution, notebookVariableProvider, notebookReplDocument
+product.json (WINS): notebookDeprecated, notebookMessaging, notebookMime, notebookCellExecutionState, quickPickSortByLabel, notebookKernelSource, interactiveWindow, notebookControllerAffinityHidden, contribNotebookStaticPreloads, quickPickItemTooltip, notebookExecution, notebookCellExecution, notebookVariableProvider, notebookReplDocument
+error @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55   ERR Proceeding with EXTRA proposals (portsAttributes) because extension is in development mode. Still, this EXTENSION WILL BE BROKEN unless product.json is updated.
+error @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55   ERR Extension 'openai.chatgpt' wants API proposal 'chatSessionsProvider' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+error @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55   ERR Extension 'openai.chatgpt' wants API proposal 'languageModelProxy' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+error @ workbench.desktop.main.js:55
+workbench.desktop.main.js:855 Overwriting extension <<.log>> to now point to mime <<log>>
+(anonymous) @ workbench.desktop.main.js:855
+workbench.desktop.main.js:855 Overwriting extension <<.log>> to now point to mime <<log>>
+(anonymous) @ workbench.desktop.main.js:855
+workbench.desktop.main.js:855 Overwriting extension <<.conf>> to now point to mime <<text/x-apacheconf>>
+(anonymous) @ workbench.desktop.main.js:855
+workbench.desktop.main.js:855 Overwriting extension <<.properties>> to now point to mime <<text/x-java-properties>>
+(anonymous) @ workbench.desktop.main.js:855
+workbench.desktop.main.js:855 Overwriting extension <<.gradle>> to now point to mime <<text/x-gradle>>
+(anonymous) @ workbench.desktop.main.js:855
+workbench.desktop.main.js:55  WARN [ms-python.python]: 'python.venvPath' を登録できません。このプロパティは既に登録されています。
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN [redhat.vscode-rsp-ui]: 'redhat.telemetry.enabled' を登録できません。このプロパティは既に登録されています。
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN [redhat.vscode-yaml]: 'redhat.telemetry.enabled' を登録できません。このプロパティは既に登録されています。
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:55  WARN No search provider registered for scheme: file, waiting
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:13025 Overwriting grammar scope name to file mapping for scope code.log.
+Old grammar file: file:///Users/okuyama/.cursor/extensions/google.geminicodeassist-2.64.0-universal/third_party/vscode-log-output-colorizer/src/syntaxes/log.tmLanguage.
+New grammar file: file:///Users/okuyama/.cursor/extensions/googlecloudtools.cloudcode-2.36.0-universal/third_party/vscode-log-output-colorizer/src/syntaxes/log.tmLanguage
+register @ workbench.desktop.main.js:13025
+workbench.desktop.main.js:13025 Overwriting grammar scope name to file mapping for scope source.java.
+Old grammar file: file:///Applications/Cursor.app/Contents/Resources/app/extensions/java/syntaxes/java.tmLanguage.json.
+New grammar file: file:///Users/okuyama/.cursor/extensions/redhat.java-1.50.0-darwin-arm64/language-support/java/java.tmLanguage.json
+register @ workbench.desktop.main.js:13025
+workbench.desktop.main.js:13025 Overwriting grammar scope name to file mapping for scope source.yaml.
+Old grammar file: file:///Applications/Cursor.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml.tmLanguage.json.
+New grammar file: file:///Users/okuyama/.cursor/extensions/redhat.vscode-yaml-1.19.1-universal/syntaxes/yaml.tmLanguage.json
+register @ workbench.desktop.main.js:13025
+workbench.desktop.main.js:13025 Overwriting grammar scope name to file mapping for scope source.groovy.
+Old grammar file: file:///Applications/Cursor.app/Contents/Resources/app/extensions/groovy/syntaxes/groovy.tmLanguage.json.
+New grammar file: file:///Users/okuyama/.cursor/extensions/vscjava.vscode-gradle-3.17.1-universal/syntaxes/groovy.tmLanguage.json
+register @ workbench.desktop.main.js:13025
+textMateTokenizationWorker.workerMain.js:28 Overwriting grammar scope name to file mapping for scope code.log.
+Old grammar file: file:///Users/okuyama/.cursor/extensions/google.geminicodeassist-2.64.0-universal/third_party/vscode-log-output-colorizer/src/syntaxes/log.tmLanguage.
+New grammar file: file:///Users/okuyama/.cursor/extensions/googlecloudtools.cloudcode-2.36.0-universal/third_party/vscode-log-output-colorizer/src/syntaxes/log.tmLanguage
+register @ textMateTokenizationWorker.workerMain.js:28
+textMateTokenizationWorker.workerMain.js:28 Overwriting grammar scope name to file mapping for scope source.java.
+Old grammar file: file:///Applications/Cursor.app/Contents/Resources/app/extensions/java/syntaxes/java.tmLanguage.json.
+New grammar file: file:///Users/okuyama/.cursor/extensions/redhat.java-1.50.0-darwin-arm64/language-support/java/java.tmLanguage.json
+register @ textMateTokenizationWorker.workerMain.js:28
+textMateTokenizationWorker.workerMain.js:28 Overwriting grammar scope name to file mapping for scope source.yaml.
+Old grammar file: file:///Applications/Cursor.app/Contents/Resources/app/extensions/yaml/syntaxes/yaml.tmLanguage.json.
+New grammar file: file:///Users/okuyama/.cursor/extensions/redhat.vscode-yaml-1.19.1-universal/syntaxes/yaml.tmLanguage.json
+register @ textMateTokenizationWorker.workerMain.js:28
+textMateTokenizationWorker.workerMain.js:28 Overwriting grammar scope name to file mapping for scope source.groovy.
+Old grammar file: file:///Applications/Cursor.app/Contents/Resources/app/extensions/groovy/syntaxes/groovy.tmLanguage.json.
+New grammar file: file:///Users/okuyama/.cursor/extensions/vscjava.vscode-gradle-3.17.1-universal/syntaxes/groovy.tmLanguage.json
+register @ textMateTokenizationWorker.workerMain.js:28
+workbench.desktop.main.js:55  WARN [Debug] Function 'testLinearIssues' already registered, overwriting
+warn @ workbench.desktop.main.js:55
+workbench.desktop.main.js:15027 Extension Host
+workbench.desktop.main.js:55   ERR [/Users/okuyama/.cursor/extensions/github.copilot-chat-0.23.2]: この拡張機能は、現在のバージョンの VS Code と互換性のない API 提案 'defaultChatParticipant' および 'chatParticipantPrivate' を使用しています。
+error @ workbench.desktop.main.js:55
+workbench.desktop.main.js:12343 [Extension Host] Gemini 3.0 variant configuration warnings: Array(1) (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+workbench.desktop.main.js:12343 [Extension Host] GPT-5 variant configuration warnings: Array(1) (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+workbench.desktop.main.js:12343 [Extension Host] XS variant configuration warnings: Array(1) (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+workbench.desktop.main.js:55   ERR [Extension Host] (node:81537) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `Cursor Helper (Plugin) --trace-deprecation ...` to show where the warning was created)
+error @ workbench.desktop.main.js:55
+workbench.desktop.main.js:12343 [Extension Host] (node:81537) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `Cursor Helper (Plugin) --trace-deprecation ...` to show where the warning was created) (at file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334)
+Thf @ workbench.desktop.main.js:12343
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Failed to load message bundle for file /Users/okuyama/.cursor/extensions/ms-edgedevtools.vscode-edge-devtools-2.1.10-universal/out/extension (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] (node:81537) [DEP0051] DeprecationWarning: The `util.isNullOrUndefined` API is deprecated. Please use `arg === null || arg === undefined` instead.
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] (node:81537) [DEP0051] DeprecationWarning: The `util.isNullOrUndefined` API is deprecated. Please use `arg === null || arg === undefined` instead. (at file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334)
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:14974 No Tomcat instances are configured. Configure one as per https://marketplace.visualstudio.com/items?itemName=SnehalJha.local-tomcat#extesion-settings
+onDidChangeNotification @ workbench.desktop.main.js:14974
+(anonymous) @ workbench.desktop.main.js:14974
+_deliver @ workbench.desktop.main.js:49
+_deliverQueue @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+addNotification @ workbench.desktop.main.js:10084
+notify @ workbench.desktop.main.js:13024
+(anonymous) @ workbench.desktop.main.js:12358
+_showMessage @ workbench.desktop.main.js:12358
+$showMessage @ workbench.desktop.main.js:12358
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:13258 Failed to get git telemetry attributes: Error: Failed to execute git
+    at t.Git._exec (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/main.js:2:34792)
+    at t.Git.exec (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/main.js:2:33915)
+    at t.GitProvider.executeGitCommandStable (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/cursor-retrieval/dist/main.js:2:1423402)
+    at t.GitProvider.getRepoInfo (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/cursor-retrieval/dist/main.js:2:1399204)
+    at async Promise.all (index 2)
+    at t.GitProvider.getGitTelemetryAttributes (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/cursor-retrieval/dist/main.js:2:1445723)
+    at Vbe.$getGitTelemetryAttributes (/Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:199:82603)
+getGitAttributes @ workbench.desktop.main.js:13258
+setTimeout
+e.setTimeout @ workbench.desktop.main.js:12478
+(anonymous) @ workbench.desktop.main.js:542
+waitForGitContextProvider @ workbench.desktop.main.js:542
+workbench.desktop.main.js:15042 Error getting git root Error: Failed to execute git
+    at t.Git._exec (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/main.js:2:34792)
+    at t.Git.exec (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/main.js:2:33915)
+    at t.GitProvider.executeGitCommandStable (vscode-file://vscode-app/Applications/Cursor.app/Contents/Resources/app/extensions/cursor-retrieval/dist/main.js:2:1423402)
+    at Vbe.$getGitRoot (/Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:199:77573)
+isRepoReadyForBackgroundComposer @ workbench.desktop.main.js:15042
+setTimeout
+e.setTimeout @ workbench.desktop.main.js:12478
+(anonymous) @ workbench.desktop.main.js:542
+waitForGitContextProvider @ workbench.desktop.main.js:542
+workbench.desktop.main.js:55   ERR [Extension Host] [otel.error] {"stack":"OTLPExporterError: Bad Request\n    at IncomingMessage.<anonymous> (/Applications/Cursor.app/Contents/Resources/app/node_modules/@opentelemetry/otlp-exporter-base/build/src/transport/http-transport-utils.js:52:31)\n    at IncomingMessage.emit (node:events:531:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at processTicksAndRejections (node:internal/process/task_queues:90:21)","message":"Bad Request","code":"400","name":"OTLPExporterError","data":"{\"error\":\"Trace spans collection is not enabled for this user\"}"}
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] [otel.error] {"stack":"OTLPExporterError: Bad Request\n    at IncomingMessage.<anonymous> (/Applications/Cursor.app/Contents/Resources/app/node_modules/@opentelemetry/otlp-exporter-base/build/src/transport/http-transport-utils.js:52:31)\n    at IncomingMessage.emit (node:events:531:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at processTicksAndRejections (node:internal/process/task_queues:90:21)","message":"Bad Request","code":"400","name":"OTLPExporterError","data":"{\"error\":\"Trace spans collection is not enabled for this user\"}"} (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:55   ERR [Extension Host] Unsuccessful http request to https://cloudcode-pa.googleapis.com/v1internal:listExperiments. Response: {"error":{"code":401,"message":"Request is missing required authentication credential. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.","status":"UNAUTHENTICATED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"CREDENTIALS_MISSING","domain":"googleapis.com","metadata":{"method":"google.internal.cloud.code.v1internal.CloudCode.ListExperiments","service":"cloudcode-pa.googleapis.com"}}]}}, headers: {"www-authenticate":["Bearer realm=\"https://accounts.google.com/\""],"vary":["Origin, X-Origin, Referer"],"content-type":["application/json; charset=UTF-8"],"content-encoding":["gzip"],"date":["Sun, 28 Dec 2025 11:26:46 GMT"],"server":["ESF"],"x-xss-protection":["0"],"x-frame-options":["SAMEORIGIN"],"x-content-type-options":["nosniff"],"server-timing":["gfet4t7; dur=76"],"alt-svc":["h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"],"connection":["close"],"transfer-encoding":["chunked"]}, error: [object Object]
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] Unsuccessful http request to https://cloudcode-pa.googleapis.com/v1internal:listExperiments. Response: {"error":{"code":401,"message":"Request is missing required authentication credential. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.","status":"UNAUTHENTICATED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"CREDENTIALS_MISSING","domain":"googleapis.com","metadata":{"method":"google.internal.cloud.code.v1internal.CloudCode.ListExperiments","service":"cloudcode-pa.googleapis.com"}}]}}, headers: {"www-authenticate":["Bearer realm=\"https://accounts.google.com/\""],"vary":["Origin, X-Origin, Referer"],"content-type":["application/json; charset=UTF-8"],"content-encoding":["gzip"],"date":["Sun, 28 Dec 2025 11:26:46 GMT"],"server":["ESF"],"x-xss-protection":["0"],"x-frame-options":["SAMEORIGIN"],"x-content-type-options":["nosniff"],"server-timing":["gfet4t7; dur=76"],"alt-svc":["h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"],"connection":["close"],"transfer-encoding":["chunked"]}, error: [object Object] (at file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334)
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:13074 [transport] Connect error in unary AI connect ConnectError: [deadline_exceeded] the operation timed out
+    at t (workbench.desktop.main.js:12375:457550)
+    at async Object.checkNumberConfig (workbench.desktop.main.js:585:88139)
+    at async workbench.desktop.main.js:13105:3935
+    at async n (workbench.desktop.main.js:13105:3694)
+    at async Mfo.maybeRefreshConfigInner (workbench.desktop.main.js:13105:3918)
+    at async Mfo.getLatestConfig (workbench.desktop.main.js:13105:3307) {arch: 'arm64', platform: 'darwin', channel: 'stable', client_version: '2.2.44', service: 'aiserver.v1.AiService', …}
+error @ workbench.desktop.main.js:13074
+t @ workbench.desktop.main.js:12375
+await in t
+(anonymous) @ workbench.desktop.main.js:12375
+ehr @ workbench.desktop.main.js:52
+pU @ workbench.desktop.main.js:52
+unary @ workbench.desktop.main.js:12375
+(anonymous) @ workbench.desktop.main.js:585
+(anonymous) @ workbench.desktop.main.js:13105
+setTimeout
+e.setTimeout @ workbench.desktop.main.js:12478
+(anonymous) @ workbench.desktop.main.js:585
+transport @ workbench.desktop.main.js:585
+workbench.desktop.main.js:13074 [transport] Connect error in unary AI connect ConnectError: [unauthenticated] You must be a team member to access this resource
+    at t (workbench.desktop.main.js:12375:457550)
+    at async Object.getTeamCommands (workbench.desktop.main.js:585:88139)
+    at async vMo.loadTeamCommands (workbench.desktop.main.js:15030:2986) {arch: 'arm64', platform: 'darwin', channel: 'stable', client_version: '2.2.44', service: 'aiserver.v1.DashboardService', …}
+error @ workbench.desktop.main.js:13074
+t @ workbench.desktop.main.js:12375
+await in t
+(anonymous) @ workbench.desktop.main.js:12375
+ehr @ workbench.desktop.main.js:52
+pU @ workbench.desktop.main.js:52
+unary @ workbench.desktop.main.js:12375
+(anonymous) @ workbench.desktop.main.js:585
+loadTeamCommands @ workbench.desktop.main.js:15030
+setTimeout
+e.setTimeout @ workbench.desktop.main.js:12478
+(anonymous) @ workbench.desktop.main.js:585
+transport @ workbench.desktop.main.js:585
+workbench.desktop.main.js:15030 Failed to load team commands: ConnectError: [unauthenticated] You must be a team member to access this resource
+    at t (workbench.desktop.main.js:12375:457550)
+    at async Object.getTeamCommands (workbench.desktop.main.js:585:88139)
+    at async vMo.loadTeamCommands (workbench.desktop.main.js:15030:2986)
+loadTeamCommands @ workbench.desktop.main.js:15030
+setTimeout
+e.setTimeout @ workbench.desktop.main.js:12478
+(anonymous) @ workbench.desktop.main.js:585
+transport @ workbench.desktop.main.js:585
+workbench.desktop.main.js:55   ERR [Extension Host] [otel.error] Error: @opentelemetry/api: Attempted duplicate registration of API: metrics
+    at G5 (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:639:1011)
+    at t.setGlobalMeterProvider (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:639:18778)
+    at e1e.createMeterProvider (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:27712)
+    at new e1e (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:26472)
+    at t.createProvider (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:34186)
+    at t.createProviders (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:33777)
+    at t.create (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:40796)
+    at Bvt (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:58772)
+    at Proxy.<anonymous> (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:58943)
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:55
+error @ workbench.desktop.main.js:14986
+Dhf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:12343 [Extension Host] [otel.error] Error: @opentelemetry/api: Attempted duplicate registration of API: metrics
+    at G5 (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:639:1011)
+    at t.setGlobalMeterProvider (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:639:18778)
+    at e1e.createMeterProvider (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:27712)
+    at new e1e (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:26472)
+    at t.createProvider (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:34186)
+    at t.createProviders (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:33777)
+    at t.create (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:40796)
+    at Bvt (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:58772)
+    at Proxy.<anonymous> (/Users/okuyama/.cursor/extensions/saoudrizwan.claude-dev-3.46.1-universal/dist/extension.js:699:58943) (at console.<anonymous> (file:///Applications/Cursor.app/Contents/Resources/app/out/vs/workbench/api/node/extensionHostProcess.js:201:32334))
+Thf @ workbench.desktop.main.js:12343
+$logExtensionHostMessage @ workbench.desktop.main.js:12343
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+workbench.desktop.main.js:15371 An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.
+mountTo @ workbench.desktop.main.js:15371
+_show @ workbench.desktop.main.js:15371
+claim @ workbench.desktop.main.js:15371
+claim @ workbench.desktop.main.js:8088
+claimWebview @ workbench.desktop.main.js:12351
+setInput @ workbench.desktop.main.js:12351
+await in setInput
+doSetInput @ workbench.desktop.main.js:884
+doOpenEditor @ workbench.desktop.main.js:884
+openEditor @ workbench.desktop.main.js:884
+(anonymous) @ workbench.desktop.main.js:7769
+doShowEditor @ workbench.desktop.main.js:7769
+doOpenEditor @ workbench.desktop.main.js:7769
+openEditor @ workbench.desktop.main.js:7769
+openEditor @ workbench.desktop.main.js:12411
+openWebview @ workbench.desktop.main.js:12352
+$createWebviewPanel @ workbench.desktop.main.js:12369
+_doInvokeHandler @ workbench.desktop.main.js:13027
+_invokeHandler @ workbench.desktop.main.js:13027
+_receiveRequest @ workbench.desktop.main.js:13027
+_receiveOneMessage @ workbench.desktop.main.js:13027
+(anonymous) @ workbench.desktop.main.js:13027
+_deliver @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:49
+fire @ workbench.desktop.main.js:12360
+(anonymous) @ workbench.desktop.main.js:15027
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:281 Found unexpected service worker controller. Found: vscode-webview://057rcdghp8rfm0sscped71rss63b6f3af81dmffn3c1qgo3mfif3/service-worker.js?v=4&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&id=fcd9b7fc-7594-46ca-a7fd-81d158b7c8c7&remoteAuthority=. Expected: service-worker.js?v=4&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&id=a0694f85-4fa2-4d17-b985-88239a732a10&remoteAuthority=. Waiting for controllerchange.
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:1007 Rendering chart with options: {type: 'line', xAxis: '日付', yAxis: Array(2), title: '店舗別売上推移', showLegend: true, …}
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:1008 Data rows: 28
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:1009 Chart.js available? function
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:1013 X-axis labels: 28 (5) ['2025/08/01', '2025/08/02', '2025/08/03', '2025/08/04', '2025/08/05']
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:1098 Creating Chart instance...
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:1099 Config: {
+  "type": "line",
+  "data": {
+    "labels": [
+      "2025/08/01",
+      "2025/08/02",
+      "2025/08/03",
+      "2025/08/04",
+      "2025/08/05",
+      "2025/08/06",
+      "2025/08/07",
+      "2025/08/08",
+      "2025/08/09",
+      "2025/08/10",
+      "2025/08/11",
+      "2025/08/12",
+      "2025/08/13",
+      "2025/08/14",
+      "2025/08/15",
+      "2025/08/16",
+      "2025/08/17",
+      "2025/08/18",
+      "2025/08/19",
+      "2025/08/20",
+      "2025/08/22",
+      "2025/08/23",
+      "2025/08/24",
+      "2025/08/26",
+      "2025/08/27",
+      "2025/08/28",
+      "2025/08/29",
+      "2025/08/31"
+    ],
+    "datasets": [
+      {
+        "label": "小村井店",
+        "data": [
+          118,
+          135,
+          73,
+          0,
+          2,
+          145,
+          95,
+          218,
+          63,
+          228,
+          76,
+          110,
+          241,
+          84,
+          123,
+          2,
+          225,
+          0,
+          1,
+          173,
+          107,
+          4,
+          256,
+          1,
+          206,
+          1,
+          298,
+          265
+        ],
+        "borderColor": "#FF0000",
+        "backgroundColor": "#FF000033",
+        "borderWidth": 2,
+        "tension": 0.4,
+        "fill": false
+      },
+      {
+        "label": "京成小岩店",
+        "data": [
+          181,
+          0,
+          0,
+          183,
+          36,
+          126,
+          0,
+          32,
+          0,
+          56,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          145,
+          346,
+          711,
+          292,
+          3,
+          878,
+          0,
+          79,
+          0,
+          0,
+          0
+        ],
+        "borderColor": "#008800",
+        "backgroundColor": "#00880033",
+        "borderWidth": 2,
+        "tension": 0.4,
+        "fill": false
+      }
+    ]
+  },
+  "options": {
+    "responsive": true,
+    "maintainAspectRatio": true,
+    "aspectRatio": 2,
+    "plugins": {
+      "legend": {
+        "display": true,
+        "position": "top",
+        "labels": {
+          "color": "#616161"
+        }
+      },
+      "title": {
+        "display": true,
+        "text": "店舗別売上推移",
+        "color": "#616161"
+      }
+    },
+    "scales": {
+      "x": {
+        "display": true,
+        "grid": {
+          "display": true,
+          "color": "rgba(128, 128, 128, 0.35)"
+        },
+        "ticks": {
+          "color": "#616161"
+        }
+      },
+      "y": {
+        "display": true,
+        "stacked": false,
+        "grid": {
+          "display": true,
+          "color": "rgba(128, 128, 128, 0.35)"
+        },
+        "ticks": {
+          "color": "#616161"
+        }
+      }
+    }
+  }
+}
+index.html?id=a0694f85-4fa2-4d17-b985-88239a732a10&origin=eadd7dfe-9494-44ff-9a32-9a4068dbf828&swVersion=4&extensionId=okuyamashin.querycanvas&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app:1102 Chart created successfully! An {config: bn, $context: {…}, platform: ws, id: 0, ctx: CanvasRenderingContext2D, …}
