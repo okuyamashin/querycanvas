@@ -2,7 +2,7 @@
   "name": "querycanvas",
   "displayName": "QueryCanvas - AI-Powered Database Client",
   "description": "Cursor-integrated database client with smart SQL formatting and display customization",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "publisher": "okuyamashin",
   "icon": "icon.png",
   "author": {

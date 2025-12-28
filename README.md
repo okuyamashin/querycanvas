@@ -29,6 +29,7 @@ A Cursor-integrated database client extension for VS Code. Supports MySQL/Postgr
 - **✨ SQL Formatter**: One-click SQL formatting for better readability
 - **🎨 Display Options**: Customize result display via SQL comments (alignment, number format, datetime format, colors)
 - **🎯 Conditional Styling** 🆕: Dynamic cell styling based on values (e.g., negative numbers in red, values over threshold in bold)
+- **📈 Graph Visualization** 🆕: Interactive charts (line, bar, pie, area, scatter) using Chart.js
 - **📋 Clipboard Copy** 🆕: Copy results as TSV or HTML (paste directly into PowerPoint/Excel/Word)
 
 ### 📋 Automated Schema Documentation ⭐
@@ -216,6 +217,46 @@ Cmd+Shift+P → "QueryCanvas: Setup Cursor AI Rules"
 - ER diagram generation
 - Dataset diff view
 
+## Advanced Features
+
+### 📈 Graph Visualization
+
+Visualize query results with interactive charts. Use the `@chart` directive in SQL comments:
+
+```sql
+/**
+ * @chart type=line x=日付 y=小村井店,京成小岩店 title="店舗別売上推移"
+ * @row 曜日=="土":bg=#eeeeff
+ * @row 曜日=="日":bg=#ffeeee
+ * @column 小村井店 type=int align=right format=number comma=true color="#FF0000"
+ * @column 京成小岩店 type=int align=right format=number comma=true color="#008800"
+ */
+SELECT 
+  DATE_FORMAT(YMD_CREATED, '%Y/%m/%d') AS '日付',
+  CASE DAYOFWEEK(YMD_CREATED)
+    WHEN 1 THEN '日' WHEN 2 THEN '月' WHEN 3 THEN '火'
+    WHEN 4 THEN '水' WHEN 5 THEN '木' WHEN 6 THEN '金' WHEN 7 THEN '土'
+  END AS '曜日',
+  SUM(CASE WHEN SHOP_NAME = '小村井店' THEN 1 ELSE 0 END) AS '小村井店',
+  SUM(CASE WHEN SHOP_NAME = '京成小岩店' THEN 1 ELSE 0 END) AS '京成小岩店'
+FROM sales_data
+WHERE YMD_CREATED LIKE '202508%'
+GROUP BY YMD_CREATED
+ORDER BY YMD_CREATED;
+```
+
+**Supported chart types:**
+- `line`: Line chart (time-series, trends)
+- `bar`: Bar chart (category comparison)
+- `pie`: Pie chart (proportions)
+- `area`: Area chart (cumulative data)
+- `scatter`: Scatter plot (correlations)
+
+**View Toggle:**
+When `@chart` is specified, **📊 テーブル** and **📈 グラフ** buttons appear, allowing you to switch between table and chart views.
+
+**Documentation:** See [docs/CHART-VISUALIZATION-GUIDE.md](docs/CHART-VISUALIZATION-GUIDE.md) for complete guide.
+
 ## Development
 
 ### Setup
@@ -292,6 +333,7 @@ querycanvas/
 - **mysql2**: MySQL Node.js client (Promise-based)
 - **pg**: PostgreSQL Node.js client
 - **Webview**: Custom UI implementation
+- **Chart.js 4.4.1**: Interactive chart visualization 🆕
 
 ## Architecture
 

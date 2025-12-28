@@ -5,6 +5,33 @@ All notable changes to the "QueryCanvas" extension will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-12-28
+
+### Added
+- **📈 Graph Visualization Feature** 🆕: Interactive chart visualization using Chart.js
+  - New `@chart` directive for graph display
+  - Supported chart types: `line`, `bar`, `pie`, `area`, `scatter`
+  - Multiple Y-axis series support (comma-separated)
+  - Customizable options: title, legend, grid, stacking, curve style
+  - Color integration with `@column` directive colors
+  - View toggle buttons: **📊 テーブル** ↔ **📈 グラフ**
+  - Responsive design with VS Code theme integration
+  - Chart.js v4.4.1 integration via CDN
+  - Comprehensive guide: `docs/CHART-VISUALIZATION-GUIDE.md`
+  - 10 practical examples: `docs/examples/chart-examples.sql`
+
+### Changed
+- Enhanced SQL comment parser to support `@chart` directive
+- Updated Webview HTML to include Chart.js and graph canvas
+- Extended query result message to include chart options
+- Improved result display area with tab switching UI
+
+### Documentation
+- Added comprehensive graph visualization guide
+- Updated `.cursorrules` with chart directive syntax
+- Updated `README.md` with graph feature examples
+- Enhanced Technology Stack section with Chart.js
+
 ## [0.2.0] - 2025-12-28
 
 ### Added

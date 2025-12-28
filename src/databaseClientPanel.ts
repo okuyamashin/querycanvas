@@ -984,7 +984,8 @@ export class DatabaseClientPanel {
                 rowCount: result.rowCount,
                 executionTime: result.executionTime,
                 displayOptions: Array.from(displayOptions.columns.entries()).map(([_, opts]) => opts),
-                rowStyleRules: displayOptions.rowStyles || []
+                rowStyleRules: displayOptions.rowStyles || [],
+                chartOptions: displayOptions.chart || null
             });
 
             vscode.window.showInformationMessage(`クエリを実行しました (${result.rowCount}行, ${result.executionTime.toFixed(3)}秒)`);
@@ -1012,6 +1013,8 @@ export class DatabaseClientPanel {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Database Client</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -1182,6 +1185,44 @@ export class DatabaseClientPanel {
         #resultTable {
             flex: 1;
             overflow: auto;
+        }
+
+        /* グラフ表示エリア */
+        #resultChart {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+            display: none;
+        }
+
+        #chartCanvas {
+            max-width: 100%;
+            max-height: 600px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            margin-right: 10px;
+        }
+
+        .toggle-button {
+            padding: 4px 12px;
+            font-size: 12px;
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .toggle-button.active {
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+        }
+
+        .toggle-button:hover {
+            opacity: 0.8;
         }
 
         textarea {
@@ -1571,16 +1612,30 @@ export class DatabaseClientPanel {
     <div class="result-container" id="resultContainer">
         <div class="section-header">
             <div class="section-title">実行結果</div>
-            <div class="button-group" id="resultButtons" style="display: none; gap: 10px;">
-                <button class="secondary" onclick="copyTableAsTSV()" title="PowerPointに貼り付け可能なタブ区切り形式でコピー">
-                    📋 TSVコピー
-                </button>
-                <button class="secondary" onclick="copyTableAsHTML()" title="スタイル付きHTMLとしてコピー（Excel/Word/PowerPointで利用可能）">
-                    📋 HTMLコピー
-                </button>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- 表示切り替えボタン -->
+                <div class="view-toggle" id="viewToggle" style="display: none;">
+                    <button class="toggle-button active" id="tableViewBtn" onclick="switchToTableView()">
+                        📊 テーブル
+                    </button>
+                    <button class="toggle-button" id="chartViewBtn" onclick="switchToChartView()">
+                        📈 グラフ
+                    </button>
+                </div>
+                <div class="button-group" id="resultButtons" style="display: none; gap: 10px;">
+                    <button class="secondary" onclick="copyTableAsTSV()" title="PowerPointに貼り付け可能なタブ区切り形式でコピー">
+                        📋 TSVコピー
+                    </button>
+                    <button class="secondary" onclick="copyTableAsHTML()" title="スタイル付きHTMLとしてコピー（Excel/Word/PowerPointで利用可能）">
+                        📋 HTMLコピー
+                    </button>
+                </div>
             </div>
         </div>
         <div id="resultTable"></div>
+        <div id="resultChart">
+            <canvas id="chartCanvas"></canvas>
+        </div>
     </div>
 
     <!-- Display Options ヘルプモーダル -->
@@ -2813,7 +2868,8 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
                 executionTime: message.executionTime,
                 query: document.getElementById('sqlInput').value,
                 displayOptions: message.displayOptions,
-                rowStyleRules: message.rowStyleRules
+                rowStyleRules: message.rowStyleRules,
+                chartOptions: message.chartOptions
             };
 
             // 表示オプションをMapに変換
@@ -2826,6 +2882,15 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
 
             // 行スタイルルール
             const rowStyleRules = message.rowStyleRules || [];
+
+            // グラフオプションがある場合は、トグルボタンを表示
+            if (message.chartOptions) {
+                document.getElementById('viewToggle').style.display = 'flex';
+                // グラフを描画
+                renderChart(message.columns, message.rows, message.chartOptions, displayOptionsMap);
+            } else {
+                document.getElementById('viewToggle').style.display = 'none';
+            }
 
             // テーブルを生成
             const { columns, rows, rowCount, executionTime } = message;
@@ -2857,6 +2922,9 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
             
             document.getElementById('resultTable').innerHTML = html;
             
+            // デフォルトはテーブルビューを表示
+            switchToTableView();
+            
             // コピーボタンを表示
             document.getElementById('resultButtons').style.display = 'flex';
             
@@ -2871,6 +2939,131 @@ SELECT ステータス, 警告 FROM monitoring;</code></pre>
             }
             
             showMessage('クエリが正常に実行されました', 'success');
+        }
+
+        // グラフ描画用の変数
+        let currentChart = null;
+
+        /**
+         * グラフを描画
+         */
+        function renderChart(columns, rows, chartOptions, displayOptionsMap) {
+            const canvas = document.getElementById('chartCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 既存のチャートを破棄
+            if (currentChart) {
+                currentChart.destroy();
+                currentChart = null;
+            }
+
+            // X軸データを取得
+            const labels = rows.map(row => row[chartOptions.xAxis]);
+
+            // Y軸データセットを作成（複数系列対応）
+            const datasets = chartOptions.yAxis.map((yColumn, index) => {
+                // @columnで指定された色を取得
+                const columnOpts = displayOptionsMap.get(yColumn);
+                const colors = [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                    '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                ];
+                const color = columnOpts?.color || colors[index % colors.length];
+
+                const data = rows.map(row => {
+                    const value = row[yColumn];
+                    return value !== null && value !== undefined ? Number(value) : 0;
+                });
+
+                return {
+                    label: yColumn,
+                    data: data,
+                    borderColor: color,
+                    backgroundColor: color + '33', // 20% opacity
+                    borderWidth: 2,
+                    tension: chartOptions.curve === 'smooth' ? 0.4 : 0,
+                    fill: chartOptions.type === 'area'
+                };
+            });
+
+            // Chart.jsの設定
+            const config = {
+                type: chartOptions.type === 'area' ? 'line' : chartOptions.type,
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2,
+                    plugins: {
+                        legend: {
+                            display: chartOptions.showLegend !== false,
+                            position: 'top',
+                            labels: {
+                                color: getComputedStyle(document.body).getPropertyValue('--vscode-foreground')
+                            }
+                        },
+                        title: {
+                            display: !!chartOptions.title,
+                            text: chartOptions.title || '',
+                            color: getComputedStyle(document.body).getPropertyValue('--vscode-foreground')
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: chartOptions.showGrid !== false,
+                                color: getComputedStyle(document.body).getPropertyValue('--vscode-panel-border')
+                            },
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--vscode-foreground')
+                            }
+                        },
+                        y: {
+                            display: true,
+                            stacked: chartOptions.stacked || false,
+                            grid: {
+                                display: chartOptions.showGrid !== false,
+                                color: getComputedStyle(document.body).getPropertyValue('--vscode-panel-border')
+                            },
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--vscode-foreground')
+                            }
+                        }
+                    }
+                }
+            };
+
+            // 円グラフの場合は軸を非表示
+            if (chartOptions.type === 'pie') {
+                delete config.options.scales;
+            }
+
+            // グラフを作成
+            currentChart = new Chart(ctx, config);
+        }
+
+        /**
+         * テーブルビューに切り替え
+         */
+        function switchToTableView() {
+            document.getElementById('resultTable').style.display = 'block';
+            document.getElementById('resultChart').style.display = 'none';
+            document.getElementById('tableViewBtn').classList.add('active');
+            document.getElementById('chartViewBtn').classList.remove('active');
+        }
+
+        /**
+         * グラフビューに切り替え
+         */
+        function switchToChartView() {
+            document.getElementById('resultTable').style.display = 'none';
+            document.getElementById('resultChart').style.display = 'block';
+            document.getElementById('tableViewBtn').classList.remove('active');
+            document.getElementById('chartViewBtn').classList.add('active');
         }
 
         function handleConnectionTestResult(message) {

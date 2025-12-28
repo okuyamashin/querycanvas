@@ -34,6 +34,26 @@ export interface RowStyleRule {
     };
 }
 
+/** グラフ表示オプション */
+export interface ChartDisplayOptions {
+    /** グラフタイプ (line, bar, pie, area など) */
+    type: 'line' | 'bar' | 'pie' | 'area' | 'scatter';
+    /** X軸に使用する列名 */
+    xAxis: string;
+    /** Y軸に使用する列名（複数系列対応） */
+    yAxis: string[];
+    /** グラフタイトル */
+    title?: string;
+    /** 凡例を表示するか */
+    showLegend?: boolean;
+    /** グリッド線を表示するか */
+    showGrid?: boolean;
+    /** スタックモード（棒グラフ用） */
+    stacked?: boolean;
+    /** カーブの種類（折れ線グラフ用）: smooth, straight */
+    curve?: 'smooth' | 'straight';
+}
+
 export interface ColumnDisplayOptions {
     /** 列名 */
     columnName: string;
@@ -66,6 +86,8 @@ export interface QueryDisplayOptions {
     columns: Map<string, ColumnDisplayOptions>;
     /** 行スタイルルール */
     rowStyles?: RowStyleRule[];
+    /** グラフ表示オプション */
+    chart?: ChartDisplayOptions;
 }
 
 /**
@@ -110,6 +132,15 @@ export class SqlCommentParser {
                 if (rowRule) {
                     options.rowStyles!.push(rowRule);
                 }
+            }
+        }
+
+        // @chart ディレクティブを抽出
+        const chartMatch = commentContent.match(/@chart\s+([^\n]+)/);
+        if (chartMatch) {
+            const chartOption = this.parseChartDirective(chartMatch[0]);
+            if (chartOption) {
+                options.chart = chartOption;
             }
         }
 
@@ -336,6 +367,91 @@ export class SqlCommentParser {
         }
 
         return rule;
+    }
+
+    /**
+     * @chartディレクティブをパース
+     * @param directive ディレクティブ文字列
+     * @returns グラフオプション
+     */
+    private static parseChartDirective(directive: string): ChartDisplayOptions | null {
+        // @chart type=line x=日付 y=小村井店,京成小岩店 の形式
+        const match = directive.match(/@chart\s+(.*)/);
+        if (!match) {
+            return null;
+        }
+
+        const optionsStr = match[1];
+
+        // デフォルト値
+        let chartType: ChartDisplayOptions['type'] = 'line';
+        let xAxis = '';
+        let yAxis: string[] = [];
+        let title: string | undefined;
+        let showLegend = true;
+        let showGrid = true;
+        let stacked = false;
+        let curve: 'smooth' | 'straight' = 'smooth';
+
+        // key=value 形式のオプションを抽出
+        const optionMatches = optionsStr.matchAll(/(\w+)=("([^"]*)"|'([^']*)'|([^\s]+))/g);
+        for (const optionMatch of optionMatches) {
+            const key = optionMatch[1];
+            // ダブルクォート、シングルクォート、または通常の値
+            const value = optionMatch[3] || optionMatch[4] || optionMatch[5];
+
+            switch (key) {
+                case 'type':
+                    if (value === 'line' || value === 'bar' || value === 'pie' || value === 'area' || value === 'scatter') {
+                        chartType = value;
+                    }
+                    break;
+                case 'x':
+                case 'xAxis':
+                    xAxis = value;
+                    break;
+                case 'y':
+                case 'yAxis':
+                    // カンマ区切りで複数系列対応
+                    yAxis = value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+                    break;
+                case 'title':
+                    title = value;
+                    break;
+                case 'legend':
+                case 'showLegend':
+                    showLegend = value === 'true';
+                    break;
+                case 'grid':
+                case 'showGrid':
+                    showGrid = value === 'true';
+                    break;
+                case 'stacked':
+                    stacked = value === 'true';
+                    break;
+                case 'curve':
+                    if (value === 'smooth' || value === 'straight') {
+                        curve = value;
+                    }
+                    break;
+            }
+        }
+
+        // X軸とY軸は必須
+        if (!xAxis || yAxis.length === 0) {
+            return null;
+        }
+
+        return {
+            type: chartType,
+            xAxis,
+            yAxis,
+            title,
+            showLegend,
+            showGrid,
+            stacked,
+            curve
+        };
     }
 
     /**

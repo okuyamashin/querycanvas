@@ -27,10 +27,21 @@ When generating SQL with display options, follow these rules EXACTLY:
 - Example: `@row 曜日=="土":bg=#eeeeff`
 - Example: `@row 売上>1000000:bg=#ccffcc,bold=true`
 
+### @chart directive (graph visualization) 🆕
+```sql
+@chart type=line x=日付 y=売上,利益
+```
+- **Required:** `type`, `x` (or `xAxis`), `y` (or `yAxis`)
+- **Chart types:** `line`, `bar`, `pie`, `area`, `scatter`
+- **Y-axis:** Comma-separated for multiple series (e.g., `y=店舗A,店舗B,店舗C`)
+- **Optional:** `title="タイトル"`, `legend=true`, `grid=true`, `stacked=true`, `curve=smooth`
+- Example: `@chart type=line x=日付 y=小村井店,京成小岩店 title="店舗別売上推移"`
+
 ### ❌ WRONG Examples
 ```sql
 @row if 曜日=土:background=#eee     ❌ NO! Has 'if', uses '=', uses 'background'
 @row 国名=フランス:bg=#fee           ❌ NO! No quotes, uses single '='
+@chart x=日付                       ❌ NO! Missing required 'type' and 'y'
 ```
 
 ### ✅ CORRECT Examples
@@ -38,6 +49,7 @@ When generating SQL with display options, follow these rules EXACTLY:
 @row 曜日=="土":bg=#eee              ✅ YES!
 @row 国名=="フランス":bg=#fee        ✅ YES!
 @row 売上>1000000:bg=#ccffcc         ✅ YES!
+@chart type=line x=日付 y=売上       ✅ YES!
 ```
 
 ---
@@ -386,10 +398,12 @@ LIMIT 10;
 6. Specify `type=int|float|decimal` when using conditional styling
 7. **🆕 Use row styling (`@row`) to highlight entire rows based on conditions**
 8. **🆕 Combine row and column styling for sophisticated visual presentations**
-9. Keep column names in original language (often Japanese)
-10. Remember this is a read-only client (no INSERT/UPDATE/DELETE)
-11. **Mention clipboard copy feature when user needs to create reports or presentations**
-12. **Suggest HTML Copy to preserve styling in PowerPoint/Excel**
+9. **🆕 Use graph visualization (`@chart`) for time-series data and trend analysis**
+10. Keep column names in original language (often Japanese)
+11. Remember this is a read-only client (no INSERT/UPDATE/DELETE)
+12. **Mention clipboard copy feature when user needs to create reports or presentations**
+13. **Suggest HTML Copy to preserve styling in PowerPoint/Excel**
+14. **Suggest chart visualization for data with temporal or categorical patterns**
 
 ## ⚠️ CRITICAL: Row Styling Syntax
 
@@ -416,4 +430,94 @@ LIMIT 10;
 ```sql
 @row if 曜日=土:background=#eeeeff  ❌ WRONG!
 ```
+
+## 📈 Graph Visualization Feature 🆕
+
+QueryCanvas now supports interactive chart visualization using Chart.js.
+
+### When to Suggest Chart Visualization
+
+**Recommend charts when:**
+- User has time-series data (dates, timestamps)
+- User wants to compare multiple categories or stores
+- Data shows trends or patterns
+- User mentions: "グラフ", "チャート", "可視化", "トレンド", "推移"
+
+### Chart Directive Syntax
+
+```sql
+/**
+ * @chart type=<type> x=<x_column> y=<y_columns> [options]
+ */
+```
+
+**Required:**
+- `type`: Chart type (`line`, `bar`, `pie`, `area`, `scatter`)
+- `x` or `xAxis`: Column name for X-axis
+- `y` or `yAxis`: Column name(s) for Y-axis (comma-separated for multiple series)
+
+**Optional:**
+- `title="タイトル"`: Chart title
+- `legend=true|false`: Show/hide legend (default: true)
+- `grid=true|false`: Show/hide grid lines (default: true)
+- `stacked=true|false`: Stack bars (for bar charts only)
+- `curve=smooth|straight`: Line curve style (for line charts, default: smooth)
+
+### Chart Types and Use Cases
+
+| Type | Use Case | Example |
+|------|----------|---------|
+| `line` | Time-series, trends | Daily sales, monthly revenue |
+| `bar` | Category comparison | Store ranking, product sales |
+| `area` | Cumulative data | Stacked revenue streams |
+| `pie` | Proportions | Market share, category breakdown |
+| `scatter` | Correlation | Price vs. quantity |
+
+### Color Integration
+
+Colors specified in `@column` directives are automatically applied to chart series:
+
+```sql
+/**
+ * @chart type=line x=日付 y=店舗A,店舗B
+ * @column 店舗A color="#FF6384"
+ * @column 店舗B color="#36A2EB"
+ */
+```
+
+### Complete Example
+
+```sql
+/**
+ * @chart type=line x=日付 y=小村井店,京成小岩店 title="店舗別売上推移"
+ * @row 曜日=="土":bg=#eeeeff
+ * @row 曜日=="日":bg=#ffeeee
+ * @column 小村井店 type=int align=right format=number comma=true color="#FF0000"
+ * @column 京成小岩店 type=int align=right format=number comma=true color="#008800"
+ */
+SELECT 
+  DATE_FORMAT(YMD_CREATED, '%Y/%m/%d') AS '日付',
+  CASE DAYOFWEEK(YMD_CREATED)
+    WHEN 1 THEN '日' WHEN 2 THEN '月' WHEN 3 THEN '火'
+    WHEN 4 THEN '水' WHEN 5 THEN '木' WHEN 6 THEN '金' WHEN 7 THEN '土'
+  END AS '曜日',
+  SUM(CASE WHEN SHOP_NAME = '小村井店' THEN 1 ELSE 0 END) AS '小村井店',
+  SUM(CASE WHEN SHOP_NAME = '京成小岩店' THEN 1 ELSE 0 END) AS '京成小岩店'
+FROM sales_data
+WHERE YMD_CREATED LIKE '202508%'
+GROUP BY YMD_CREATED
+ORDER BY YMD_CREATED;
+```
+
+### UI Behavior
+
+When `@chart` is specified:
+- **📊 テーブル** and **📈 グラフ** toggle buttons appear
+- Users can switch between table view and chart view
+- Both views show the same data in different formats
+
+### Documentation
+
+- Full guide: `docs/CHART-VISUALIZATION-GUIDE.md`
+- Technical specs: Chart.js v4.4.1 via CDN
 
