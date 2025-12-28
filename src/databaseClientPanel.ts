@@ -1021,6 +1021,51 @@ export class DatabaseClientPanel {
             color: var(--vscode-foreground);
         }
 
+        .sql-editor-section {
+            margin-bottom: 0;
+        }
+
+        .resizer {
+            height: 8px;
+            background-color: var(--vscode-panel-border);
+            cursor: ns-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .resizer:hover {
+            background-color: var(--vscode-focusBorder);
+        }
+
+        .resizer:active {
+            background-color: var(--vscode-focusBorder);
+        }
+
+        .resizer-line {
+            width: 40px;
+            height: 2px;
+            background-color: var(--vscode-foreground);
+            opacity: 0.5;
+            border-radius: 1px;
+        }
+
+        .result-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 150px;
+            overflow: hidden;
+        }
+
+        #resultTable {
+            flex: 1;
+            overflow: auto;
+        }
+
         textarea {
             width: 100%;
             min-height: 120px;
@@ -1284,7 +1329,7 @@ export class DatabaseClientPanel {
         <button onclick="openSavedQueries()">💾 保存済みクエリ</button>
     </div>
 
-    <div class="section">
+    <div class="section sql-editor-section" id="sqlEditorSection">
         <div class="section-title">SQL入力</div>
         <textarea id="sqlInput" placeholder="SELECT * FROM users;" oninput="onSqlInputChange()"></textarea>
         <div class="button-group">
@@ -1295,7 +1340,12 @@ export class DatabaseClientPanel {
         </div>
     </div>
 
-    <div class="result-container">
+    <!-- リサイザー（ドラッグで境界を調整） -->
+    <div class="resizer" id="resizer">
+        <div class="resizer-line"></div>
+    </div>
+
+    <div class="result-container" id="resultContainer">
         <div class="section-title">実行結果</div>
         <div id="resultTable"></div>
     </div>
@@ -1517,6 +1567,56 @@ export class DatabaseClientPanel {
         let currentProfileId = null;
         let isConnected = false;
         let sqlInputDebounceTimer = null;
+
+        // リサイザーの初期化
+        (function initResizer() {
+            const resizer = document.getElementById('resizer');
+            const sqlEditorSection = document.getElementById('sqlEditorSection');
+            const resultContainer = document.getElementById('resultContainer');
+            const sqlInput = document.getElementById('sqlInput');
+            
+            let isResizing = false;
+            let startY = 0;
+            let startHeight = 0;
+
+            // 保存された高さを復元
+            const savedHeight = localStorage.getItem('sqlEditorHeight');
+            if (savedHeight) {
+                sqlInput.style.height = savedHeight + 'px';
+            }
+
+            resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startY = e.clientY;
+                startHeight = sqlInput.offsetHeight;
+                
+                document.body.style.cursor = 'ns-resize';
+                document.body.style.userSelect = 'none';
+                
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                
+                const deltaY = e.clientY - startY;
+                const newHeight = Math.max(80, Math.min(600, startHeight + deltaY));
+                
+                sqlInput.style.height = newHeight + 'px';
+                sqlInput.style.minHeight = newHeight + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                    
+                    // 高さを保存
+                    localStorage.setItem('sqlEditorHeight', sqlInput.offsetHeight);
+                }
+            });
+        })();
 
         // 初期化時にプロファイル一覧を取得
         window.addEventListener('load', () => {
