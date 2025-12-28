@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { ConnectionProfileManager, IDBConnection, ConnectionFactory } from './database';
+import { SchemaDocumentGenerator } from './schemaDocumentGenerator';
 
 /**
  * データベースクライアントのWebviewパネルを管理するクラス
@@ -113,6 +114,9 @@ export class DatabaseClientPanel {
                 break;
             case 'disconnect':
                 this._handleDisconnect();
+                break;
+            case 'extractSchema':
+                this._handleExtractSchema();
                 break;
             case 'testConnection':
                 this._handleTestConnection(message.data);
@@ -383,8 +387,54 @@ export class DatabaseClientPanel {
     }
 
     /**
-     * 接続テストを処理
+     * テーブルスキーマを抽出
      */
+    private async _handleExtractSchema() {
+        try {
+            // 接続を確認
+            if (!this._currentConnection || !this._currentConnection.isConnected()) {
+                throw new Error('データベースに接続されていません。先に接続してください。');
+            }
+
+            // アクティブな接続プロファイルを取得
+            const activeProfile = this._profileManager.getActiveProfile();
+            if (!activeProfile) {
+                throw new Error('アクティブな接続プロファイルが見つかりません');
+            }
+
+            // スキーマドキュメント生成器を作成
+            const generator = new SchemaDocumentGenerator();
+
+            // スキーマを抽出
+            vscode.window.showInformationMessage('テーブル定義を取得しています...');
+            const tableCount = await generator.extractAllTables(
+                this._currentConnection,
+                activeProfile.database
+            );
+
+            // 成功を通知
+            this.sendMessage({
+                type: 'schemaExtracted',
+                success: true,
+                tableCount
+            });
+
+            vscode.window.showInformationMessage(
+                `${tableCount}個のテーブル定義を db-schema/tables/ に保存しました。Cursorと会話しながら補足情報を追記してください。`
+            );
+
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            
+            this.sendMessage({
+                type: 'schemaExtracted',
+                success: false,
+                error: errorMessage
+            });
+
+            vscode.window.showErrorMessage(`スキーマ抽出エラー: ${errorMessage}`);
+        }
+    }
     private async _handleTestConnection(data: any) {
         try {
             const profile = this._profileManager.getProfile(data.profileId);
@@ -1111,7 +1161,12 @@ export class DatabaseClientPanel {
         }
 
         function getTableSchema() {
-            showMessage('テーブル定義取得機能は実装中です', 'info');
+            if (!isConnected) {
+                showMessage('データベースに接続してください', 'error');
+                return;
+            }
+
+            vscode.postMessage({ type: 'extractSchema' });
         }
 
         function openDataManager() {
