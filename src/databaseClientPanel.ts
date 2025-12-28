@@ -1090,16 +1090,37 @@ export class DatabaseClientPanel {
             background-color: var(--vscode-list-hoverBackground);
         }
 
+        #messageContainer {
+            position: fixed;
+            bottom: 70px; /* フッターの高さ + 余白 */
+            left: 20px;
+            right: 20px;
+            z-index: 100;
+            pointer-events: none; /* メッセージ自体はクリックをスルー */
+        }
+
+        #messageContainer > * {
+            pointer-events: auto; /* メッセージ内のボタンなどはクリック可能 */
+        }
+
         .result-info {
-            margin-top: 10px;
+            position: fixed;
+            bottom: 70px; /* フッターの高さ + 余白 */
+            left: 20px;
+            right: 20px;
+            padding: 8px 12px;
             font-size: 12px;
             color: var(--vscode-descriptionForeground);
+            background-color: var(--vscode-editor-background);
+            border-top: 1px solid var(--vscode-panel-border);
+            z-index: 99;
         }
 
         .message {
             padding: 10px;
             margin: 10px 0;
             border-radius: 3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .message.success {
@@ -1274,13 +1295,14 @@ export class DatabaseClientPanel {
         </div>
     </div>
 
-    <div id="messageContainer"></div>
-
     <div class="result-container">
         <div class="section-title">実行結果</div>
         <div id="resultTable"></div>
-        <div class="result-info" id="resultInfo"></div>
     </div>
+
+    <!-- メッセージとステータス表示エリア（フッターの直前） -->
+    <div id="messageContainer"></div>
+    <div class="result-info" id="resultInfo"></div>
 
     <!-- 下部：接続情報（未接続時） -->
     <div class="footer" id="connectionFooter">
