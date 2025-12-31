@@ -283,6 +283,10 @@ When `@chart` is specified, **📊 テーブル** and **📈 グラフ** buttons
 
 ### Setup
 
+**📖 詳細なセットアップ手順は [docs/SETUP.md](./docs/SETUP.md) を参照してください。**
+
+#### Quick Start
+
 1. Install dependencies:
 ```bash
 npm install
@@ -298,13 +302,22 @@ Or use watch mode for automatic compilation:
 npm run watch
 ```
 
-### Debug and Run
+3. Debug and Run:
+   - Press `F5` (or "Run" → "Start Debugging")
+   - A new window (Extension Development Host) will open
+   - Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
+   - Type "QueryCanvas: Open Database Client" and execute
 
-1. Open this project in VS Code/Cursor
-2. Press `F5` (or "Run" → "Start Debugging")
-3. A new window (Extension Development Host) will open
-4. Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
-5. Type "Database Client: Open" and execute
+#### Initial Setup Steps
+
+After starting the extension, complete the initial setup:
+
+1. **Setup Cursor Rules**: Click "📝 Cursor AI設定" button in Database Client panel
+2. **Add Database Connection**: Click "⚙️ Manage Connections" → "+ Add New Connection"
+3. **Connect to Database**: Select connection from dropdown → Click "Connect"
+4. **Extract Schema**: Click "📋 Extract Schema" to generate table definitions
+
+See [docs/SETUP.md](./docs/SETUP.md) for detailed instructions.
 
 ### Project Structure
 
@@ -372,6 +385,7 @@ querycanvas/
 
 ## Documentation
 
+- [SETUP.md](./docs/SETUP.md) - **Initial setup guide** (Cursor Rules, database connection, schema extraction)
 - [TESTING.md](./TESTING.md) - Testing and debugging procedures
 - [Specifications](./docs/specifications/) - Feature specifications and architecture
 - [Conversation History](./docs/conversations/) - Development process
