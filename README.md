@@ -3,8 +3,26 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.85%2B-blue)](https://code.visualstudio.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3%2B-blue)](https://www.typescriptlang.org/)
+[![VS Code Marketplace](https://img.shields.io/vscode-marketplace/v/okuyamashin.querycanvas)](https://marketplace.visualstudio.com/items?itemName=okuyamashin.querycanvas)
 
 A Cursor-integrated database client extension for VS Code. Supports MySQL/PostgreSQL with AI-powered schema documentation and query management features designed for seamless integration with Cursor AI.
+
+## 📦 Installation
+
+Install from VS Code Marketplace:
+
+1. Open VS Code/Cursor
+2. Open Extensions view (`Cmd+Shift+X` / `Ctrl+Shift+X`)
+3. Search for "QueryCanvas"
+4. Click "Install"
+
+Or install directly from Marketplace:
+- **[Install QueryCanvas from VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=okuyamashin.querycanvas)**
+
+Quick install via Command Palette:
+1. Press `Cmd+P` / `Ctrl+P`
+2. Type: `ext install okuyamashin.querycanvas`
+3. Press Enter
 
 ## Features
 
@@ -88,6 +106,10 @@ A Cursor-integrated database client extension for VS Code. Supports MySQL/Postgr
 ```
 
 ## Usage
+
+### 0. Installation
+
+If you haven't installed QueryCanvas yet, see the [Installation](#-installation) section above.
 
 ### 1. Open Database Client
 
